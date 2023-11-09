@@ -11,7 +11,7 @@ Content-Type: application/json
 {
     "name": "Bombril",
     "price": 2.30,
-    "manufacturer" : "Bombril",
+    "manufacturerId" : 1,
     "manufacturingDate" : "2019-07-04",
     "expirationDate" : "2023-07-04",
     "categoryId": 1
@@ -24,7 +24,7 @@ Content-Type: application/json
 {
   "name": "Bombril",
   "price": 2.60,
-  "manufacturer" : "Bombril",
+  "manufacturerId" : 1,
   "manufacturingDate" : "2019-07-04",
   "expirationDate" : "2023-07-04",
   "categoryId": 1
