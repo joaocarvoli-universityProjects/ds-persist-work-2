@@ -1,31 +1,31 @@
 package br.ufc.work02.service.impl
 
-import br.ufc.work02.domain.model.ProductCategory
-import br.ufc.work02.domain.repository.ProductCategoryRepository
-import br.ufc.work02.service.ProductCategoryService
+import br.ufc.work02.domain.model.Category
+import br.ufc.work02.domain.repository.CategoryRepository
+import br.ufc.work02.service.CategoryService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class ProductCategoryServiceImpl(private val productCategoryRepository: ProductCategoryRepository) : ProductCategoryService {
+class CategoryServiceImpl(private val productCategoryRepository: CategoryRepository) : CategoryService {
 
     @Transactional
-    override fun findAll(): List<ProductCategory> {
+    override fun findAll(): List<Category> {
         return productCategoryRepository.findAll()
     }
 
     @Transactional
-    override fun findById(id: Long): ProductCategory {
+    override fun findById(id: Long): Category {
         return productCategoryRepository.getReferenceById(id.toInt())
     }
 
     @Transactional
-    override fun create(model: ProductCategory): ProductCategory {
+    override fun create(model: Category): Category {
         return productCategoryRepository.save(model)
     }
 
     @Transactional
-    override fun update(id: Long, model: ProductCategory): ProductCategory {
+    override fun update(id: Long, model: Category): Category {
         val productCategory = productCategoryRepository.getReferenceById(id.toInt())
 
         productCategory.name = model.name

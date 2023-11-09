@@ -1,7 +1,7 @@
 package br.ufc.work02.controller
 
 import br.ufc.work02.controller.dto.ProductDto
-import br.ufc.work02.service.ProductCategoryService
+import br.ufc.work02.service.CategoryService
 import br.ufc.work02.service.ProductService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/product")
 class ProductController(
         private val productService: ProductService,
-        private val productCategoryService: ProductCategoryService
+        private val productCategoryService: CategoryService
 ) {
 
     @GetMapping

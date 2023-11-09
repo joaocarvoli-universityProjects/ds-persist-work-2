@@ -1,5 +1,5 @@
 package br.ufc.work02.service
 
-import br.ufc.work02.domain.model.ProductCategory
+import br.ufc.work02.domain.model.Category
 
-interface ProductCategoryService : GenericCrudService<ProductCategory, Long>
+interface CategoryService : GenericCrudService<Category, Long>

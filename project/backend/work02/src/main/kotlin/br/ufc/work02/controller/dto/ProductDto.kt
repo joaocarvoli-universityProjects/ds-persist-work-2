@@ -1,8 +1,8 @@
 package br.ufc.work02.controller.dto
 
+import br.ufc.work02.domain.model.Category
 import br.ufc.work02.domain.model.GenericDto
 import br.ufc.work02.domain.model.Product
-import br.ufc.work02.domain.model.ProductCategory
 import java.util.*
 
 data class ProductDto(
@@ -15,7 +15,7 @@ data class ProductDto(
         val categoryId: Long?
 ) : GenericDto<Product> {
 
-    private lateinit var productCategory : ProductCategory
+    private lateinit var productCategory : Category
 
     constructor(model: Product) : this(
         id = model.id,
@@ -27,7 +27,7 @@ data class ProductDto(
         categoryId = model.category.id
     )
 
-    fun setProductCategory(productCategory: ProductCategory){
+    fun setProductCategory(productCategory: Category){
         this.productCategory = productCategory
     }
 

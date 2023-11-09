@@ -1,18 +1,18 @@
 package br.ufc.work02.controller.dto
 
+import br.ufc.work02.domain.model.Category
 import br.ufc.work02.domain.model.GenericDto
-import br.ufc.work02.domain.model.ProductCategory
 
-data class ProductCategoryDto(
+data class CategoryDto(
         val id: Long?,
         val name: String
-) : GenericDto<ProductCategory> {
-    constructor(model: ProductCategory) : this(
+) : GenericDto<Category> {
+    constructor(model: Category) : this(
             id = model.id,
             name = model.name
     )
 
-    override fun toModel(): ProductCategory {
-        return ProductCategory(name = name)
+    override fun toModel(): Category {
+        return Category(name = name)
     }
 }

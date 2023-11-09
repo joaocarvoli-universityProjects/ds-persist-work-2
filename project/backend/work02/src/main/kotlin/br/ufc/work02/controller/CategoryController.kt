@@ -1,40 +1,40 @@
 package br.ufc.work02.controller
 
-import br.ufc.work02.controller.dto.ProductCategoryDto
-import br.ufc.work02.service.ProductCategoryService
+import br.ufc.work02.controller.dto.CategoryDto
+import br.ufc.work02.service.CategoryService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/product-category")
-class ProductCategoryController(private val productCategoryService: ProductCategoryService) {
+class CategoryController(private val productCategoryService: CategoryService) {
 
     @GetMapping
-    fun findAllProductsCategories() : ResponseEntity<List<ProductCategoryDto>> {
+    fun findAllProductsCategories() : ResponseEntity<List<CategoryDto>> {
         val productsCategories = productCategoryService.findAll()
-        val productsCategoriesDto = productsCategories.map { ProductCategoryDto(it) }
+        val productsCategoriesDto = productsCategories.map { CategoryDto(it) }
         return ResponseEntity.ok(productsCategoriesDto)
     }
 
     @GetMapping("/{id}")
-    fun getProductCategory(@PathVariable id: Long) : ResponseEntity<ProductCategoryDto> {
+    fun getProductCategory(@PathVariable id: Long) : ResponseEntity<CategoryDto> {
         val productCategory = productCategoryService.findById(id)
-        val productCategoryDto = ProductCategoryDto(productCategory)
+        val productCategoryDto = CategoryDto(productCategory)
         return ResponseEntity.ok(productCategoryDto)
     }
 
     @PostMapping
-    fun createProductCategory(@RequestBody productCategoryDto: ProductCategoryDto) : ResponseEntity<ProductCategoryDto> {
+    fun createProductCategory(@RequestBody productCategoryDto: CategoryDto) : ResponseEntity<CategoryDto> {
         val productCategory = productCategoryService.create(productCategoryDto.toModel())
-        val productCategoryDtoResultant = ProductCategoryDto(productCategory)
+        val productCategoryDtoResultant = CategoryDto(productCategory)
 
         return ResponseEntity.ok(productCategoryDtoResultant)
     }
 
     @PutMapping("/{id}")
-    fun updateProductCategory(@PathVariable id: Long, @RequestBody productCategoryDto: ProductCategoryDto) : ResponseEntity<ProductCategoryDto> {
+    fun updateProductCategory(@PathVariable id: Long, @RequestBody productCategoryDto: CategoryDto) : ResponseEntity<CategoryDto> {
         val productCategory = productCategoryService.update(id, productCategoryDto.toModel())
-        val productCategoryDtoResultant = ProductCategoryDto(productCategory)
+        val productCategoryDtoResultant = CategoryDto(productCategory)
 
         return ResponseEntity.ok(productCategoryDtoResultant)
     }
