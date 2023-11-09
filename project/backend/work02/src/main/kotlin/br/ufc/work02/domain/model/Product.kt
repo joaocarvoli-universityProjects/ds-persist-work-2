@@ -28,5 +28,5 @@ data class Product(
     var expirationDate: Date,
 
     @OneToOne
-    var category: ProductCategory
+    var category: Category
 )

@@ -3,7 +3,7 @@ package br.ufc.work02.domain.model
 import jakarta.persistence.*
 
 @Entity(name = "product_category")
-data class ProductCategory(
+data class Category(
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
