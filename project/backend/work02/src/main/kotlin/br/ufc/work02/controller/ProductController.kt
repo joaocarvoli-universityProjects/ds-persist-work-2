@@ -2,6 +2,7 @@ package br.ufc.work02.controller
 
 import br.ufc.work02.controller.dto.ProductDto
 import br.ufc.work02.service.CategoryService
+import br.ufc.work02.service.ManufacturerService
 import br.ufc.work02.service.ProductService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -10,7 +11,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/product")
 class ProductController(
         private val productService: ProductService,
-        private val productCategoryService: CategoryService
+        private val productCategoryService: CategoryService,
+        private val manufacturerService: ManufacturerService
 ) {
 
     @GetMapping
@@ -29,30 +31,30 @@ class ProductController(
 
     @PostMapping
     fun createProduct(@RequestBody productDto: ProductDto) : ResponseEntity<ProductDto> {
-        val productCategory = productDto.categoryId?.let { productCategoryService.findById(it) }
-        if (productCategory != null) {
-            productDto.setProductCategory(productCategory)
-        }
-
-        val product = productService.create(productDto.toModel())
+        val product = productService.create(mountProductDto(productDto).toModel())
         val productDtoResultant = ProductDto(product)
         return ResponseEntity.ok(productDtoResultant)
     }
 
     @PutMapping("/{id}")
     fun updateProduct(@PathVariable id: Long, @RequestBody productDto: ProductDto) : ResponseEntity<ProductDto> {
-        val productCategory = productDto.categoryId?.let { productCategoryService.findById(it) }
-        if (productCategory != null) {
-            productDto.setProductCategory(productCategory)
-        }
-
-        val product = productService.update(id, productDto.toModel())
-        val productDtoResultant = product?.let { ProductDto(it) }
+        val product = productService.update(id, mountProductDto(productDto).toModel())
+        val productDtoResultant = ProductDto(product)
         return ResponseEntity.ok(productDtoResultant)
     }
 
     @DeleteMapping("/{id}")
     fun deleteProduct(@PathVariable id: Long) {
         productService.delete(id)
+    }
+
+    private fun mountProductDto(productDto: ProductDto) : ProductDto {
+        val productCategory = productDto.categoryId?.let { productCategoryService.findById(it) }
+        val manufacturer = productDto.manufacturerId?.let { manufacturerService.findById(it) }
+        if (productCategory != null && manufacturer != null) {
+            productDto.setProductCategory(productCategory)
+            productDto.setProductManufacturer(manufacturer)
+        }
+        return productDto
     }
 }

@@ -16,15 +16,15 @@ data class Product(
     @Column
     var price: Double,
 
-    @Column
-    var manufacturer: String,
+    @OneToOne
+    var manufacturer: Manufacturer,
 
     @Column
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.DATE)
     var manufacturingDate: Date,
 
     @Column
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.DATE)
     var expirationDate: Date,
 
     @OneToOne

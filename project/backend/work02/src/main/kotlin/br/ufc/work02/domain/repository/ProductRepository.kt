@@ -1,6 +1,7 @@
 package br.ufc.work02.domain.repository
 
 import br.ufc.work02.domain.model.Category
+import br.ufc.work02.domain.model.Manufacturer
 import br.ufc.work02.domain.model.Product
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
@@ -24,7 +25,7 @@ interface ProductRepository : JpaRepository<Product, Int>{
         @Param(value = "id") id: Long,
         @Param(value = "name") name: String?,
         @Param(value = "price") price: Double,
-        @Param(value = "manufacturer") manufacturer: String,
+        @Param(value = "manufacturer") manufacturer: Manufacturer,
         @Param(value = "manufacturingDate") manufacturingDate: Date,
         @Param(value = "expirationDate") expirationDate: Date,
         @Param(value = "category") category: Category
