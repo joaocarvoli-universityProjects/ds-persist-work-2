@@ -16,7 +16,7 @@ data class Product(
     @Column
     var price: Double,
 
-    @OneToOne
+    @ManyToOne
     var manufacturer: Manufacturer,
 
     @Column
@@ -27,6 +27,9 @@ data class Product(
     @Temporal(TemporalType.DATE)
     var expirationDate: Date,
 
-    @OneToOne
-    var category: Category
+    @ManyToOne
+    var category: Category,
+
+    @Column
+    var amount: Int
 )

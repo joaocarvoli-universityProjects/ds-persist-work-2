@@ -6,7 +6,7 @@ import br.ufc.work02.domain.model.Manufacturer
 import br.ufc.work02.domain.model.Product
 import java.util.*
 
-data class ProductDto(
+data class ProductDtoIn(
         val id: Long?,
         val name: String,
         val price: Double,
@@ -17,8 +17,8 @@ data class ProductDto(
         val amount: Int
 ) : GenericDto<Product> {
 
-    private lateinit var productCategory : Category
-    private lateinit var manufacturer : Manufacturer
+    lateinit var category: Category
+    lateinit var manufacturer : Manufacturer
 
     constructor(model: Product) : this(
         id = model.id,
@@ -32,7 +32,7 @@ data class ProductDto(
     )
 
     fun setProductCategory(productCategory: Category){
-        this.productCategory = productCategory
+        this.category = productCategory
     }
 
     fun setProductManufacturer(manufacturer: Manufacturer){
@@ -42,7 +42,19 @@ data class ProductDto(
     override fun toModel(): Product {
         return Product(
             name = name, price = price, manufacturer = manufacturer, manufacturingDate = manufacturingDate,
-                expirationDate = expirationDate, category = productCategory, amount = amount
+                expirationDate = expirationDate, category = category, amount = amount
         )
     }
 }
+
+data class ProductDtoOut(
+    val id: Long?,
+    val name: String,
+    val price: Double,
+    val manufacturer: Manufacturer,
+    val manufacturingDate: Date,
+    val expirationDate: Date,
+    val category: Category,
+    val amount: Int
+)
+

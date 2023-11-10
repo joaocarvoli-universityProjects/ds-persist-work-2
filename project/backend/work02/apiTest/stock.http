@@ -1,24 +1,26 @@
 ### Get all products categories
-GET {{base_url}}/manufacturer
+GET {{base_url}}/stock
 
 ### GET product category by id
-GET {{base_url}}/manufacturer/1
+GET {{base_url}}/stock/1
 
 ### POST create a product category
-POST {{base_url}}/manufacturer
+POST {{base_url}}/stock
 Content-Type: application/json
 
 {
-  "name": "Bombril"
+  "name": "l1",
+  "productsIds": [1]
 }
 
 ### PUT update a product category
-PUT {{base_url}}/manufacturer/2
+PUT {{base_url}}/stock/1
 Content-Type: application/json
 
 {
-  "name": "Ypê"
+  "name": "l1",
+  "productsIds": [1]
 }
 
 ### DELETE delete a product category
-DELETE {{base_url}}/manufacturer/1
+DELETE {{base_url}}/stock/1

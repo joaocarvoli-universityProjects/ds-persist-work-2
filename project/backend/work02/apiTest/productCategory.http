@@ -13,7 +13,7 @@ Content-Type: application/json
 }
 
 ### PUT update a product category
-PUT {{base_url}}/product-category/1
+PUT {{base_url}}/product-category/2
 Content-Type: application/json
 
 {

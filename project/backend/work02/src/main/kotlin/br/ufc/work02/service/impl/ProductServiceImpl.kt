@@ -34,6 +34,7 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
         product.category = model.category
         product.manufacturingDate = model.manufacturingDate
         product.expirationDate = model.expirationDate
+        product.amount = model.amount
 
         productRepository.updateById(
             id,
@@ -42,7 +43,8 @@ class ProductServiceImpl(private val productRepository: ProductRepository) : Pro
             product.manufacturer,
             product.manufacturingDate,
             product.expirationDate,
-            product.category
+            product.category,
+            product.amount
         )
 
         return productRepository.getReferenceById(id.toInt())

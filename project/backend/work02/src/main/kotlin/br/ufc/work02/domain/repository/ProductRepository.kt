@@ -19,7 +19,8 @@ interface ProductRepository : JpaRepository<Product, Int>{
             " p.manufacturer = :manufacturer," +
             " p.manufacturingDate = :manufacturingDate," +
             " p.expirationDate = :expirationDate," +
-            " p.category = :category " +
+            " p.category = :category, " +
+            " p.amount = :amount" +
             " where p.id = :id")
     fun updateById(
         @Param(value = "id") id: Long,
@@ -28,6 +29,7 @@ interface ProductRepository : JpaRepository<Product, Int>{
         @Param(value = "manufacturer") manufacturer: Manufacturer,
         @Param(value = "manufacturingDate") manufacturingDate: Date,
         @Param(value = "expirationDate") expirationDate: Date,
-        @Param(value = "category") category: Category
+        @Param(value = "category") category: Category,
+        @Param(value = "amount") amount: Int
         )
 }
