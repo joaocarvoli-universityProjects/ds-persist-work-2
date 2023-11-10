@@ -13,5 +13,5 @@ data class ProductRequest(
     var product: Product,
 
     @Column
-    var productAmount : Int
+    var amount : Int
 )
