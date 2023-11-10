@@ -13,7 +13,8 @@ data class ProductDto(
         val manufacturerId: Long?,
         val manufacturingDate: Date,
         val expirationDate: Date,
-        val categoryId: Long?
+        val categoryId: Long?,
+        val amount: Int
 ) : GenericDto<Product> {
 
     private lateinit var productCategory : Category
@@ -26,7 +27,8 @@ data class ProductDto(
         manufacturerId = model.manufacturer.id,
         manufacturingDate = model.manufacturingDate,
         expirationDate = model.expirationDate,
-        categoryId = model.category.id
+        categoryId = model.category.id,
+        amount = model.amount
     )
 
     fun setProductCategory(productCategory: Category){
@@ -40,7 +42,7 @@ data class ProductDto(
     override fun toModel(): Product {
         return Product(
             name = name, price = price, manufacturer = manufacturer, manufacturingDate = manufacturingDate,
-                expirationDate = expirationDate, category = productCategory
+                expirationDate = expirationDate, category = productCategory, amount = amount
         )
     }
 }
