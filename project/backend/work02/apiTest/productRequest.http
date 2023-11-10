@@ -1,0 +1,25 @@
+### Get all products categories
+GET {{base_url}}/product-request
+
+### GET product category by id
+GET {{base_url}}/product-request/1
+
+### POST create a product category
+POST {{base_url}}/product-request
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "amount": 2
+}
+
+### PUT update a product category
+PUT {{base_url}}/product-request/1
+Content-Type: application/json
+
+{
+  "amount": 1
+}
+
+### DELETE delete a product category
+DELETE {{base_url}}/product-request/1

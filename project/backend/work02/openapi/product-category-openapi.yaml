@@ -1,0 +1,101 @@
+openapi: "3.0.3"
+info:
+  title: "work02 API"
+  description: "work02 API"
+  version: "1.0.0"
+servers:
+  - url: "https://work02"
+paths:
+  /product-category:
+    get:
+      summary: "GET product-category"
+      operationId: "findAllProductsCategories"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/CategoryDto"
+    post:
+      summary: "POST product-category"
+      operationId: "createProductCategory"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CategoryDto"
+  /product-category/{id}:
+    get:
+      summary: "GET product-category/{id}"
+      operationId: "getProductCategory"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CategoryDto"
+    put:
+      summary: "PUT product-category/{id}"
+      operationId: "updateProductCategory"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CategoryDto"
+    delete:
+      summary: "DELETE product-category/{id}"
+      operationId: "deleteProductCategory"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+components:
+  schemas:
+    CategoryDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"

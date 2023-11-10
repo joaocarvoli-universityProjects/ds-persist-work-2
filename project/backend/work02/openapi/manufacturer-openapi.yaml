@@ -1,0 +1,101 @@
+openapi: "3.0.3"
+info:
+  title: "work02 API"
+  description: "work02 API"
+  version: "1.0.0"
+servers:
+  - url: "https://work02"
+paths:
+  /manufacturer:
+    get:
+      summary: "GET manufacturer"
+      operationId: "findAllProductsCategories"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ManufacturerDto"
+    post:
+      summary: "POST manufacturer"
+      operationId: "createProductCategory"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ManufacturerDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ManufacturerDto"
+  /manufacturer/{id}:
+    get:
+      summary: "GET manufacturer/{id}"
+      operationId: "getProductCategory"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ManufacturerDto"
+    put:
+      summary: "PUT manufacturer/{id}"
+      operationId: "updateProductCategory"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ManufacturerDto"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ManufacturerDto"
+    delete:
+      summary: "DELETE manufacturer/{id}"
+      operationId: "deleteProductCategory"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "OK"
+components:
+  schemas:
+    ManufacturerDto:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"

@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class Work02Application
+class Application
 
 fun main(args: Array<String>) {
-	runApplication<Work02Application>(*args)
+	runApplication<Application>(*args)
 }

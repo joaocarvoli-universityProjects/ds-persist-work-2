@@ -1,0 +1,33 @@
+### Get all products
+GET {{base_url}}/product
+
+### GET product by id
+GET {{base_url}}/product/1
+
+### POST create a product
+POST {{base_url}}/product
+Content-Type: application/json
+
+{
+    "name": "Bombril",
+    "price": 2.30,
+    "manufacturerId" : 1,
+    "manufacturingDate" : "2019-07-04",
+    "expirationDate" : "2023-07-04",
+    "categoryId": 1,
+    "amount": 5
+}
+
+### PUT update a product
+PUT {{base_url}}/product/1
+Content-Type: application/json
+
+{
+  "name": "Bombril",
+  "price": 2.60,
+  "manufacturerId" : 2,
+  "manufacturingDate" : "2019-07-04",
+  "expirationDate" : "2023-07-04",
+  "categoryId": 2,
+  "amount": 4
+}

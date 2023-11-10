@@ -5,6 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.3"
 	kotlin("jvm") version "1.8.22"
 	kotlin("plugin.spring") version "1.8.22"
+	kotlin("plugin.jpa") version "1.8.0"
 }
 
 group = "br.ufc.work02"
@@ -27,6 +28,12 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+	// Persistence
+	// https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api
+	implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.1.5")
 }
 
 tasks.withType<KotlinCompile> {
