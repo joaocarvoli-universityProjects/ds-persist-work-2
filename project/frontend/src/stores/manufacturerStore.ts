@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {api} from "../baseConfig.ts";
-import {Manufacturer} from "../model/Manufacturer.ts";
-import {mapToManufacturer} from "../model/Mappers.ts";
+import {Manufacturer} from "../model/manufacturer.ts";
+import {mapToManufacturer} from "../model/mappers.ts";
 
 export const useManufacturerStore = defineStore('Manufacturer', () => {
     async function getAllManufacturers(): Promise<Manufacturer[]> {

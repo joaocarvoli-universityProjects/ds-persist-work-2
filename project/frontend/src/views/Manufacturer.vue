@@ -60,12 +60,12 @@
 </template>
 
 <script setup lang="ts">
-import { useManufacturerStore } from "../stores/manufacturer.ts";
+import { useManufacturerStore } from "../stores/manufacturerStore.ts";
 import {onBeforeMount, reactive, ref, UnwrapRef} from "vue";
 import { Table, Input, Typography, Popconfirm } from "ant-design-vue";
-import { Manufacturer } from "../model/Manufacturer.ts";
+import { Manufacturer } from "../model/manufacturer.ts";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons-vue";
-import { columns_manufacturer } from "../utils/tables_cols.ts";
+import { columns_manufacturer } from "../utils/tablesCols.ts";
 
 const manufacturerStore = useManufacturerStore();
 const manufacturerItems = ref<Manufacturer[]>([]);
