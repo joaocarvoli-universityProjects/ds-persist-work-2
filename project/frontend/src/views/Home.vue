@@ -1,43 +1,78 @@
 <script setup lang="ts">
-
-import {Card, List} from "ant-design-vue";
 </script>
 
 <template>
   <div>
     <h1>Gerenciamento de Estoque</h1>
-    <Card title="Opções disponíveis">
-      <List>
+    <a-card title="Opções disponíveis" >
+      <a-list class="items-list">
         <router-link to="/manufacturer">
-          <List.Item.Meta
-              title="Fabricantes"
-              avatar=""/>
+          <a-list-item-meta class="item-option">
+            <template #title>
+              <a-button>
+                Solicitar produto
+              </a-button>
+            </template>
+          </a-list-item-meta>
         </router-link>
-        <router-link to="/category">
-          <List.Item.Meta
-              title="Categorias de Produto"
-              avatar=""
-          />
-        </router-link>
-        <router-link to="/product">
-          <List.Item.Meta
-              title="Produtos"
-              avatar=""
-          />
-        </router-link>
+
         <router-link to="/stock">
-          <List.Item.Meta
-              title="Estoque"
-              avatar=""
-          />
+          <a-list-item-meta class="item-option">
+            <template #title>
+              <a-button>
+                Estoque
+              </a-button>
+            </template>
+          </a-list-item-meta>
         </router-link>
-        <router-link to="/product-request">
-          <List.Item.Meta
-              title="Solicitações de Produto"
-              avatar=""
-          />
+
+        <router-link to="/product">
+          <a-list-item-meta class="item-option">
+            <template #title>
+              <a-button>
+                Produtos
+              </a-button>
+            </template>
+          </a-list-item-meta>
         </router-link>
-      </List>
-    </Card>
+
+
+        <router-link to="/category">
+          <a-list-item-meta class="item-option">
+            <template #title>
+              <a-button>
+                Categorias
+              </a-button>
+            </template>
+          </a-list-item-meta>
+        </router-link>
+
+        <router-link to="/manufacturer">
+          <a-list-item-meta class="item-option">
+            <template #title>
+              <a-button>
+                Fabricantes
+              </a-button>
+            </template>
+          </a-list-item-meta>
+        </router-link>
+
+      </a-list>
+    </a-card>
   </div>
 </template>
+
+<style>
+.items-list {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.item-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+</style>
