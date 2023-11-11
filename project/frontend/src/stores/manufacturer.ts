@@ -15,5 +15,71 @@ export const useManufacturerStore = defineStore('Manufacturer', () => {
         }
     }
 
-    return { getAllManufacturers }
+    async function createManufacturer(manufacturer: Manufacturer): Promise<RequestFeedback> {
+        let requestFeedback : RequestFeedback = {
+            success : false,
+            message : ""
+        }
+
+        try {
+            const {status } = await api.post(`manufacturer`, {
+                name: manufacturer.name
+            })
+            if(status == 200){
+                requestFeedback.success = true
+            } else {
+                requestFeedback.success = false
+            }
+
+            return requestFeedback
+        } catch (e) {
+            requestFeedback.success = false
+            return requestFeedback
+        }
+    }
+
+    async function editManufacturerById(manufacturer: Manufacturer): Promise<RequestFeedback> {
+        let requestFeedback : RequestFeedback = {
+            success : false,
+            message : ""
+        }
+
+        try {
+            const {status } = await api.put(`manufacturer/${manufacturer.id}`, {
+                name: manufacturer.name
+            })
+            if(status == 200){
+                requestFeedback.success = true
+            } else {
+                requestFeedback.success = false
+            }
+
+            return requestFeedback
+        } catch (e) {
+            requestFeedback.success = false
+            return requestFeedback
+        }
+    }
+
+    async function removeManufacturerById(manufacturerId: number): Promise<RequestFeedback> {
+        let requestFeedback : RequestFeedback = {
+            success : false,
+            message : ""
+        }
+        try {
+            const {status } = await api.delete(`manufacturer/${manufacturerId}`)
+            if(status == 200){
+                requestFeedback.success = true
+            } else {
+                requestFeedback.success = false
+            }
+
+            return requestFeedback
+        } catch (e) {
+            requestFeedback.success = false
+            return requestFeedback
+        }
+    }
+
+    return {createManufacturer, getAllManufacturers, editManufacturerById, removeManufacturerById }
 })

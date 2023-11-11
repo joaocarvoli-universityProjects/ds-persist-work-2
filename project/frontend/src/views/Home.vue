@@ -5,6 +5,7 @@ import {Card, List} from "ant-design-vue";
 
 <template>
   <div>
+    <h1>Stock Management</h1>
     <Card title="Options">
       <List>
         <router-link to="/manufacturer">
@@ -20,19 +21,19 @@ import {Card, List} from "ant-design-vue";
         </router-link>
         <router-link to="/product">
           <List.Item.Meta
-              title="Product"
+              title="Products"
               avatar=""
           />
         </router-link>
         <router-link to="/stock">
           <List.Item.Meta
-              title="Stock"
+              title="Stocks"
               avatar=""
           />
         </router-link>
         <router-link to="/product-request">
           <List.Item.Meta
-              title="Product Request"
+              title="Products Requests"
               avatar=""
           />
         </router-link>
