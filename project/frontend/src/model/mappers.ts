@@ -25,7 +25,8 @@ export function mapToProduct(productData: any): Product {
         manufacturingDate: productData.manufacturingDate,
         expirationDate: productData.expirationDate,
         category: productData.category,
-        amount: productData.amount
+        amount: productData.amount,
+        price: productData.price
     }
 }
 
@@ -36,6 +37,7 @@ export function mapToProductDto(product: Product): ProductDto {
         manufacturingDate: product.manufacturingDate,
         expirationDate: product.expirationDate,
         categoryId: parseInt(String(product.category.id)),
-        amount: product.amount
+        amount: product.amount,
+        price: product.price
     }
 }

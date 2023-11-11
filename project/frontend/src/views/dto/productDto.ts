@@ -4,5 +4,6 @@ export interface ProductDto {
     manufacturingDate: Date,
     expirationDate: Date,
     categoryId: number,
-    amount: number
+    amount: number,
+    price: number
 }

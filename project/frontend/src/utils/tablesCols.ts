@@ -46,6 +46,11 @@ export const columns_product = [
         key: "name",
     },
     {
+        title: "Preço",
+        dataIndex: "price",
+        key: "price",
+    },
+    {
         title: "Fabricante",
         dataIndex: "manufacturer",
         key: "manufacturer",

@@ -4,7 +4,7 @@
 <!--   Product Table -->
   <Table :columns="columns_product" :data-source="productItems" bordered>
     <template #bodyCell="{ column, text, record }">
-      <template v-if="['name', 'amount'].includes(column.dataIndex)">
+      <template v-if="['name', 'amount', 'price'].includes(column.dataIndex)">
         <div>
           <Input
               v-if="editableData[record.id]"
@@ -134,12 +134,21 @@
             ></a-select>
           </a-form-item>
         </div>
-        <a-form-item
-            label="Quantidade de items"
-            name="name"
-        >
-          <a-input v-model:value="formStateManufacturer.amount"/>
-        </a-form-item>
+        <div class="dates">
+          <a-form-item
+              label="Quantidade de items"
+              name="name"
+          >
+            <a-input v-model:value="formStateManufacturer.amount"/>
+          </a-form-item>
+
+          <a-form-item
+              label="Valor"
+              name="amount"
+          >
+            <a-input v-model:value="formStateManufacturer.price"/>
+          </a-form-item>
+        </div>
       </a-form>
     </a-modal>
   </div>
@@ -241,7 +250,8 @@ const formStateManufacturer = reactive<ProductDto>({
   manufacturingDate: new Date(),
   categoryId: null,
   expirationDate: new Date(),
-  amount: 0
+  amount: 0,
+  price: 0
 });
 
 
