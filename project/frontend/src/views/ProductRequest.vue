@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <h1>Product Request</h1>
+  <h1>Solicitação de Produto</h1>
 </template>
 
 <style scoped>

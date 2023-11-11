@@ -1,6 +1,6 @@
 <template>
 
-  <h2>Category</h2>
+  <h2>Categorias de Produto</h2>
 
   <!-- Categories Table -->
   <Table :columns="columns_category" :data-source="categoryItems" bordered>
@@ -102,25 +102,25 @@ onBeforeMount(() => {
   getAllCategories();
 });
 
-const editableData: UnwrapRef<Record<string, Partial<Category>>> = reactive({});
+const editableData: UnwrapRef<Record<number, Partial<Category>>> = reactive({});
 
 const edit = (key: string) => {
-  editableData[key] = { ...categoryItems.value.find((item) => key === item.id) };
+  editableData[key] = { ...categoryItems.value.find((item) => parseInt(key) === item.id) };
 };
 
 const save = (key: string) => {
   Object.assign(
       categoryItems.value.find(
-          (item) => key === item.id
+          (item) => parseInt(key) === item.id
       ),
-      editableData[key]
+      editableData[parseInt(key)]
   );
-  editCategoryById(editableData[key])
-  delete editableData[key];
+  editCategoryById(editableData[parseInt(key)])
+  delete editableData[parseInt(key)];
 };
 
 const cancel = (key: string) => {
-  delete editableData[key];
+  delete editableData[parseInt(key)];
 };
 
 const setModalVisible = (open: boolean) => {
@@ -128,7 +128,7 @@ const setModalVisible = (open: boolean) => {
 };
 
 const formStateManufacturer = reactive<Category>({
-  id: '',
+  id: 0,
   name: ''
 });
 
@@ -142,7 +142,7 @@ const handleOkButtonModal = () => {
 <style scoped>
 .editable-row-operations {
   display: flex;
-  gap: 8px;
+  justify-content: space-around;
 }
 
 .editable-row-operations a {
@@ -151,7 +151,5 @@ const handleOkButtonModal = () => {
 
 .editable_operations {
   display: flex;
-  gap: 15px;
-  margin-left: 5px;
 }
 </style>

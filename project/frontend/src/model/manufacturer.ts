@@ -1,4 +1,4 @@
 export interface Manufacturer {
-    id: String,
+    id: number,
     name: String
 }

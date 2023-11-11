@@ -1,5 +1,5 @@
 <template>
-    <h2>Manufacturer</h2>
+    <h2>Fabricantes</h2>
 
     <!-- Manufacturer Table -->
     <Table :columns="columns_manufacturer" :data-source="manufacturerItems" bordered>
@@ -97,25 +97,25 @@ onBeforeMount(() => {
   getAllManufacturers();
 });
 
-const editableData: UnwrapRef<Record<string, Partial<Manufacturer>>> = reactive({});
+const editableData: UnwrapRef<Record<number, Partial<Manufacturer>>> = reactive({});
 
 const edit = (key: string) => {
-  editableData[key] = { ...manufacturerItems.value.find((item) => key === item.id) };
+  editableData[key] = { ...manufacturerItems.value.find((item) => parseInt(key) === item.id) };
 };
 
 const save = (key: string) => {
   Object.assign(
       manufacturerItems.value.find(
-          (item) => key === item.id
+          (item) => parseInt(key) === item.id
       ),
       editableData[key]
   );
-  editManufacturerById(editableData[key])
-  delete editableData[key];
+  editManufacturerById(editableData[parseInt(key)])
+  delete editableData[parseInt(key)];
 };
 
 const cancel = (key: string) => {
-  delete editableData[key];
+  delete editableData[parseInt(key)];
 };
 
 const setModalVisible = (open: boolean) => {
@@ -123,7 +123,7 @@ const setModalVisible = (open: boolean) => {
 };
 
 const formStateManufacturer = reactive<Manufacturer>({
-  id: '',
+  id: 0,
   name: ''
 });
 
@@ -137,7 +137,7 @@ const handleOkButtonModal = () => {
 <style scoped>
 .editable-row-operations {
   display: flex;
-  gap: 8px;
+  justify-content: space-around;
 }
 
 .editable-row-operations a {
@@ -146,7 +146,5 @@ const handleOkButtonModal = () => {
 
 .editable_operations {
   display: flex;
-  gap: 15px;
-  margin-left: 5px;
 }
 </style>
