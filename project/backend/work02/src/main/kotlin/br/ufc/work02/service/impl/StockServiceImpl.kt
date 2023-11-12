@@ -11,6 +11,18 @@ class StockServiceImpl(private val stockRepository: StockRepository) : StockServ
         return stockRepository.findAll()
     }
 
+    override fun findAllByName(name: String): List<Stock> {
+        return stockRepository.findAllByName(name)
+    }
+
+    override fun findAllByAddress(address: String): List<Stock> {
+        return stockRepository.findAllByAddress(address)
+    }
+
+    override fun findAllByCep(cep: String): List<Stock> {
+        return stockRepository.findAllByCep(cep)
+    }
+
     override fun findById(id: Long): Stock {
         return stockRepository.getReferenceById(id.toInt())
     }

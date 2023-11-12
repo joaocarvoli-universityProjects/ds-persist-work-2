@@ -39,6 +39,51 @@ class StockController(private val stockService: StockService, private val produc
         return ResponseEntity.ok(stockDto)
     }
 
+    @GetMapping("/name")
+    fun findAllByName(@RequestParam("name") name: String): ResponseEntity<List<StockDtoOut>> {
+        val stocks = stockService.findAllByName(name)
+        val stocksDto = stocks.map { stock ->
+            StockDtoOut(
+                id = stock.id,
+                name = stock.name,
+                address = stock.address,
+                cep = stock.cep
+            )
+        }
+
+        return ResponseEntity.ok(stocksDto)
+    }
+
+    @GetMapping("/address")
+    fun findAllByAddress(@RequestParam("address") address: String): ResponseEntity<List<StockDtoOut>> {
+        val stocks = stockService.findAllByAddress(address)
+        val stocksDto = stocks.map { stock ->
+            StockDtoOut(
+                id = stock.id,
+                name = stock.name,
+                address = stock.address,
+                cep = stock.cep
+            )
+        }
+
+        return ResponseEntity.ok(stocksDto)
+    }
+
+    @GetMapping("/cep")
+    fun findAllByCep(@RequestParam("cep") cep: String): ResponseEntity<List<StockDtoOut>> {
+        val stocks = stockService.findAllByCep(cep)
+        val stocksDto = stocks.map { stock ->
+            StockDtoOut(
+                id = stock.id,
+                name = stock.name,
+                address = stock.address,
+                cep = stock.cep
+            )
+        }
+
+        return ResponseEntity.ok(stocksDto)
+    }
+
     @PostMapping
     fun createStock(@RequestBody stockDto: StockDtoIn): ResponseEntity<StockDtoOut> {
         val stock = stockService.create(stockDto.toModel())
