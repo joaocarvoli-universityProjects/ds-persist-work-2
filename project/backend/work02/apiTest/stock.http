@@ -1,6 +1,16 @@
 ### Get all products categories
 GET {{base_url}}/stock
 
+### Get all products by its name
+GET {{base_url}}/stock/name?name=depa
+
+### Get all products by its address
+GET {{base_url}}/stock/address?address=Rua
+
+### Get all products by its cep
+GET {{base_url}}/stock/cep?cep=60123
+
+
 ### GET product category by id
 GET {{base_url}}/stock/1
 
@@ -15,7 +25,7 @@ Content-Type: application/json
 }
 
 ### PUT update a product category
-PUT {{base_url}}/stock/2
+PUT {{base_url}}/stock/1
 Content-Type: application/json
 
 {

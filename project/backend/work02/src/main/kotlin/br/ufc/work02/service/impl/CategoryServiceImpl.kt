@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CategoryServiceImpl(private val productCategoryRepository: CategoryRepository) : CategoryService {
+    override fun findAllByName(name: String): List<Category> {
+        return productCategoryRepository.findAllByName(name)
+    }
 
     @Transactional
     override fun findAll(): List<Category> {

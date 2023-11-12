@@ -1,6 +1,9 @@
 ### Get all products categories
 GET {{base_url}}/product-category
 
+### Get all by its name
+GET {{base_url}}/product-category/name?name=c
+
 ### GET product category by id
 GET {{base_url}}/product-category/1
 

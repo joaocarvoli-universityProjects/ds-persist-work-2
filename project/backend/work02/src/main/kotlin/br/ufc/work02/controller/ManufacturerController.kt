@@ -16,6 +16,13 @@ class ManufacturerController(private val manufacturerService: ManufacturerServic
         return ResponseEntity.ok(manufacturerDtos)
     }
 
+    @GetMapping("/name")
+    fun findAllByName(@RequestParam("name") name: String) : ResponseEntity<List<ManufacturerDto>> {
+        val manufacturers = manufacturerService.findAllByName(name)
+        val manufacturerDtos = manufacturers.map { ManufacturerDto(it) }
+        return ResponseEntity.ok(manufacturerDtos)
+    }
+
     @GetMapping("/{id}")
     fun getProductCategory(@PathVariable id: Long) : ResponseEntity<ManufacturerDto> {
         val manufacturer = manufacturerService.findById(id)

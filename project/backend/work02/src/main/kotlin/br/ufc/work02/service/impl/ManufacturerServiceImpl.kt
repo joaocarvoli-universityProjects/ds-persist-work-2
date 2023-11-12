@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class ManufacturerServiceImpl(private val manufacturerRepository: ManufacturerRepository) : ManufacturerService {
+    override fun findAllByName(name: String): List<Manufacturer> {
+        return manufacturerRepository.findAllByName(name)
+    }
 
     override fun findAll(): List<Manufacturer> {
         return manufacturerRepository.findAll()

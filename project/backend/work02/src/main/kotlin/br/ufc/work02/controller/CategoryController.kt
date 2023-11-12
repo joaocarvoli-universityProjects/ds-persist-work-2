@@ -16,6 +16,13 @@ class CategoryController(private val productCategoryService: CategoryService) {
         return ResponseEntity.ok(productsCategoriesDto)
     }
 
+    @GetMapping("/name")
+    fun findAllByName(@RequestParam("name") name: String) : ResponseEntity<List<CategoryDto>> {
+        val productsCategories = productCategoryService.findAllByName(name)
+        val productsCategoriesDto = productsCategories.map { CategoryDto(it) }
+        return ResponseEntity.ok(productsCategoriesDto)
+    }
+
     @GetMapping("/{id}")
     fun getProductCategory(@PathVariable id: Long) : ResponseEntity<CategoryDto> {
         val productCategory = productCategoryService.findById(id)

@@ -4,6 +4,21 @@ GET {{base_url}}/product
 ### GET product by id
 GET {{base_url}}/product/1
 
+### Get by product field name and a name
+GET {{base_url}}/product/name?field=ManufacturerName&name=moda
+
+### Get by product price
+GET {{base_url}}/product/price?price=19.99
+
+### Get by product price range
+GET {{base_url}}/product/priceRange?priceInitial=1&priceFinal=100
+
+### Get by product amount
+GET {{base_url}}/product/amount?amount=1
+
+### Get by product amount range
+GET {{base_url}}/product/amountRange?amountInitial=1&amountFinal=10
+
 ### POST create a product
 POST {{base_url}}/product
 Content-Type: application/json
