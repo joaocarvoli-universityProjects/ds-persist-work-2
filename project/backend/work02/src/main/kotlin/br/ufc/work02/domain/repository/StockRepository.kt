@@ -8,12 +8,13 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface StockRepository : JpaRepository<Stock, Int> {
-    @Query("SELECT s FROM Stock s WHERE s.name LIKE %:name%")
+    @Query("SELECT s FROM Stock s WHERE upper(s.name) LIKE upper(concat('%', :name, '%'))")
     fun findAllByName(@Param("name") name: String): List<Stock>
 
-    @Query("SELECT s FROM Stock s WHERE s.address LIKE %:address%")
+
+    @Query("SELECT s FROM Stock s WHERE upper(s.address) LIKE upper(concat('%',:address,'%'))")
     fun findAllByAddress(@Param("address") address: String): List<Stock>
 
-    @Query("SELECT s FROM Stock s WHERE s.cep LIKE %:cep%")
+    @Query("SELECT s FROM Stock s WHERE upper(s.cep) LIKE upper(concat('%',:cep,'%'))")
     fun findAllByCep(@Param("cep") cep: String): List<Stock>
 }

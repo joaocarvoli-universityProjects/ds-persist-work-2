@@ -2,7 +2,7 @@
 GET {{base_url}}/stock
 
 ### Get all products by its name
-GET {{base_url}}/stock/name?name=Depa
+GET {{base_url}}/stock/name?name=depa
 
 ### Get all products by its address
 GET {{base_url}}/stock/address?address=Rua
