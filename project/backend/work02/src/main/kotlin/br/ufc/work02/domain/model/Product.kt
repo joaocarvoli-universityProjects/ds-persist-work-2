@@ -31,5 +31,8 @@ data class Product(
     var category: Category,
 
     @Column
-    var amount: Int
+    var amount: Int,
+
+    @ManyToOne
+    var stock: Stock
 )

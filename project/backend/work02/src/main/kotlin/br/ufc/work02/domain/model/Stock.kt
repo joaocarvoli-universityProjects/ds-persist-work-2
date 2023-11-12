@@ -12,6 +12,9 @@ data class Stock(
     @Column
     var name: String,
 
-    @OneToMany
-    var products : List<Product>
+    @Column
+    var address: String,
+
+    @Column
+    var cep: String
 )

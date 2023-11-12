@@ -23,7 +23,8 @@ class StockServiceImpl(private val stockRepository: StockRepository) : StockServ
         val stock = stockRepository.getReferenceById(id.toInt())
 
         stock.name = model.name
-        stock.products = model.products
+        stock.address = model.address
+        stock.cep = model.cep
 
         return stockRepository.save(stock)
     }

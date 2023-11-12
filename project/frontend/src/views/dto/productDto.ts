@@ -5,5 +5,6 @@ export interface ProductDto {
     expirationDate: Date,
     categoryId: number,
     amount: number,
-    price: number
+    price: number,
+    stockId: number
 }

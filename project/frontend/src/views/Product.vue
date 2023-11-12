@@ -61,6 +61,20 @@
         </div>
       </template>
 
+      <template v-else-if="column.dataIndex === 'stock'">
+        <div>
+          <a-select
+              v-if="editableData[record.id]"
+              v-model:value="editableData[record.id][column.dataIndex].name"
+              style="width: 120px"
+              :options="stockItems.map(item => ({ value: item.id, label: item.name }))"
+          ></a-select>
+          <template v-else>
+            {{ record.stock.name }}
+          </template>
+        </div>
+      </template>
+
       <template v-else-if="column.dataIndex === 'operation'">
         <div class="editable-row-operations">
             <span v-if="editableData[record.id]">
@@ -93,7 +107,7 @@
       </template>
     </a-float-button>
 
-    <a-modal v-model:open="modalVisible" title="Product Registration" centered @ok="handleOkButtonModal" width="600px">
+    <a-modal v-model:open="modalVisible" title="Cadastrar Produto" centered @ok="handleOkButtonModal" width="600px">
       <a-form>
         <a-form-item
             label="Name"
@@ -120,9 +134,10 @@
             <a-select
                 v-model:value="formStateManufacturer.manufacturerId"
                 style="width: 120px"
-                :options="productItems.map(item => ({ value: item.id, label: item.name }))"
+                :options="manufacturerItems.map(item => ({ value: item.id, label: item.name }))"
             ></a-select>
           </a-form-item>
+
           <a-form-item
               label="Categoria do Produto"
               name="name"
@@ -134,6 +149,16 @@
             ></a-select>
           </a-form-item>
         </div>
+        <a-form-item
+            label="Categoria do Produto"
+            name="name"
+        >
+          <a-select
+              v-model:value="formStateManufacturer.stockId"
+              style="width: 120px"
+              :options="stockItems.map(item => ({ value: item.id, label: item.name }))"
+          ></a-select>
+        </a-form-item>
         <div class="dates">
           <a-form-item
               label="Quantidade de items"
@@ -167,14 +192,18 @@ import {Product} from "../model/product.ts";
 import {Category} from "../model/category.ts";
 import {useCategoryStore} from "../stores/categoryStore.ts";
 import {useManufacturerStore} from "../stores/manufacturerStore.ts";
+import {useStockStore} from "../stores/stockStore.ts";
+import {Stock} from "../model/stock.ts";
 
 const productStore = useProductStore();
 const categoryStore = useCategoryStore()
 const manufacturerStore = useManufacturerStore()
+const stockStore = useStockStore()
 
 const productItems = ref<Product[]>([]);
 const manufacturerItems = ref<Manufacturer[]>([])
 const categoryItems = ref<Category[]>([]);
+const stockItems = ref<Stock[]>([])
 
 const modalVisible = ref<boolean>(false);
 
@@ -188,6 +217,11 @@ async function getAllManufacturers() {
   manufacturerItems.value = result;
 }
 
+async function getAllStocks() {
+  const result = await stockStore.getAllStocks();
+  stockItems.value = result;
+}
+
 async function getAllProducts() {
   const result = await productStore.getAllProducts();
   productItems.value = result;
@@ -199,15 +233,12 @@ async function createProduct(){
 }
 
 async function editProductById(editableData: Record<string, Partial<Product>>){
-  console.log("Calling function edit")
   const product = (editableData as unknown) as Product
   const response = await productStore.editProductById(product.id, mapToProductDto(product));
   if(response.success) await getAllProducts()
 }
 
 async function removeProductById(manufacturerIdData: string) {
-  console.log("Calling function remove")
-
   const manufacturerId = parseInt(manufacturerIdData);
   const response = await productStore.removeProductById(manufacturerId);
   if(response.success) await getAllProducts()
@@ -217,6 +248,7 @@ onBeforeMount(() => {
   getAllManufacturers();
   getAllProducts();
   getAllCategories();
+  getAllStocks();
 });
 
 const editableData: UnwrapRef<Record<string, Partial<Product>>> = reactive({});
@@ -251,7 +283,8 @@ const formStateManufacturer = reactive<ProductDto>({
   categoryId: null,
   expirationDate: new Date(),
   amount: 0,
-  price: 0
+  price: 0,
+  stockId: null,
 });
 
 

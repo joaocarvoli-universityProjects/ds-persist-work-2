@@ -1,16 +1,11 @@
 export const columns_manufacturer = [
     {
-        title: "Id",
-        dataIndex: "id",
-        key: "id",
-    },
-    {
         title: "Nome",
         dataIndex: "name",
         key: "name",
     },
     {
-        title: "Operations",
+        title: "Operações",
         dataIndex: "operation",
         width: '10%'
     },
@@ -18,28 +13,41 @@ export const columns_manufacturer = [
 
 export const columns_category = [
     {
-        title: "Id",
-        dataIndex: "id",
-        key: "id",
+        title: "Nome",
+        dataIndex: "name",
+        key: "name",
     },
+    {
+        title: "Operações",
+        dataIndex: "operation",
+        width: '10%'
+    },
+];
+
+export const columns_stock = [
     {
         title: "Nome",
         dataIndex: "name",
         key: "name",
     },
     {
-        title: "Operations",
+        title: "Endereço",
+        dataIndex: "address",
+        key: "address",
+    },
+    {
+        title: "CEP",
+        dataIndex: "cep",
+        key: "cep",
+    },
+    {
+        title: "Operações",
         dataIndex: "operation",
-        width: '10%'
+        width: '15%'
     },
 ];
 
 export const columns_product = [
-    {
-        title: "Id",
-        dataIndex: "id",
-        key: "id",
-    },
     {
         title: "Nome",
         dataIndex: "name",
@@ -49,6 +57,11 @@ export const columns_product = [
         title: "Preço",
         dataIndex: "price",
         key: "price",
+    },
+    {
+        title: "Quantidade",
+        dataIndex: "amount",
+        key: "amount",
     },
     {
         title: "Fabricante",
@@ -76,7 +89,12 @@ export const columns_product = [
         key: "amount",
     },
     {
-        title: "Operations",
+        title: "Nome Depósito",
+        dataIndex: "stock",
+        key: "stock",
+    },
+    {
+        title: "Operações",
         dataIndex: "operation",
         width: '10%'
     },

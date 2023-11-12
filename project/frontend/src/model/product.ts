@@ -1,5 +1,6 @@
 import {Manufacturer} from "./manufacturer.ts";
 import {Category} from "./category.ts";
+import {Stock} from "./stock.ts";
 
 export interface Product {
     id: number,
@@ -9,5 +10,6 @@ export interface Product {
     manufacturingDate: Date,
     expirationDate: Date,
     category: Category,
-    amount: number
+    amount: number,
+    stock: Stock
 }

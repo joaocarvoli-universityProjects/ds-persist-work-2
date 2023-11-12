@@ -6,26 +6,6 @@
     <h1>Gerenciamento de Estoque</h1>
     <a-card title="Opções disponíveis" >
       <a-list class="items-list">
-        <router-link to="/manufacturer">
-          <a-list-item-meta class="item-option">
-            <template #title>
-              <a-button>
-                Solicitar produto
-              </a-button>
-            </template>
-          </a-list-item-meta>
-        </router-link>
-
-        <router-link to="/stock">
-          <a-list-item-meta class="item-option">
-            <template #title>
-              <a-button>
-                Estoque
-              </a-button>
-            </template>
-          </a-list-item-meta>
-        </router-link>
-
         <router-link to="/product">
           <a-list-item-meta class="item-option">
             <template #title>
@@ -36,6 +16,15 @@
           </a-list-item-meta>
         </router-link>
 
+        <router-link to="/stock">
+          <a-list-item-meta class="item-option">
+            <template #title>
+              <a-button>
+                Depósitos
+              </a-button>
+            </template>
+          </a-list-item-meta>
+        </router-link>
 
         <router-link to="/category">
           <a-list-item-meta class="item-option">

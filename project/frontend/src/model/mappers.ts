@@ -2,6 +2,7 @@ import {Category} from "./category.ts";
 import {Manufacturer} from "./manufacturer.ts";
 import {Product} from "./product.ts";
 import {ProductDto} from "../views/dto/productDto.ts";
+import {Stock} from "./stock.ts";
 
 export function mapToManufacturer(manufacturerData : any): Manufacturer {
     return {
@@ -17,6 +18,15 @@ export function mapToCategory(categoryData: any): Category {
     }
 }
 
+export function mapToStock(stockData: any): Stock {
+    return {
+        id: stockData.id,
+        name: stockData.name,
+        address: stockData.address,
+        cep: stockData.cep
+    }
+}
+
 export function mapToProduct(productData: any): Product {
     return {
         id: productData.id,
@@ -26,7 +36,8 @@ export function mapToProduct(productData: any): Product {
         expirationDate: productData.expirationDate,
         category: productData.category,
         amount: productData.amount,
-        price: productData.price
+        price: productData.price,
+        stock: productData.stock
     }
 }
 
@@ -38,6 +49,7 @@ export function mapToProductDto(product: Product): ProductDto {
         expirationDate: product.expirationDate,
         categoryId: parseInt(String(product.category.id)),
         amount: product.amount,
-        price: product.price
+        price: product.price,
+        stockId: product.stock.id
     }
 }
