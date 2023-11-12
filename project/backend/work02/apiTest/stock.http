@@ -9,17 +9,19 @@ POST {{base_url}}/stock
 Content-Type: application/json
 
 {
-  "name": "l1",
-  "productsIds": [1]
+  "name": "Departamento de produtos de limpeza",
+  "address": "Rua Franciliano Freitinha",
+  "cep": "60123-132"
 }
 
 ### PUT update a product category
-PUT {{base_url}}/stock/1
+PUT {{base_url}}/stock/2
 Content-Type: application/json
 
 {
-  "name": "l1",
-  "productsIds": [1]
+  "name": "Depósito",
+  "address": "Rua Franciliano Freitinha",
+  "cep": "60123-132"
 }
 
 ### DELETE delete a product category

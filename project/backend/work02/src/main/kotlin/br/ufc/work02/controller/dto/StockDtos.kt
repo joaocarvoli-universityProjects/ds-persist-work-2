@@ -1,36 +1,33 @@
 package br.ufc.work02.controller.dto
 
 import br.ufc.work02.domain.model.GenericDto
-import br.ufc.work02.domain.model.Product
 import br.ufc.work02.domain.model.Stock
 
 data class StockDtoIn(
     val id: Long?,
     val name: String,
-    val productsIds: List<Long?>
+    val address: String,
+    val cep: String
 ) : GenericDto<Stock> {
 
-    private lateinit var products : List<Product>
 
     constructor(model: Stock) : this(
         id = model.id,
         name = model.name,
-        productsIds = model.products.map { it.id }
+        address = model.address,
+        cep = model.cep
     )
 
     override fun toModel(): Stock {
         return Stock(
-            name = name, products = products
+            name = name, address = address, cep = cep
         )
-    }
-
-    fun setProducts(products: List<Product>){
-        this.products = products
     }
 }
 
 data class StockDtoOut(
     val id: Long?,
     val name: String,
-    val products: List<Product>
+    val address: String,
+    val cep: String
 )

@@ -5,6 +5,7 @@ import br.ufc.work02.controller.dto.ProductDtoOut
 import br.ufc.work02.service.CategoryService
 import br.ufc.work02.service.ManufacturerService
 import br.ufc.work02.service.ProductService
+import br.ufc.work02.service.StockService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.*
 class ProductController(
     private val productService: ProductService,
     private val productCategoryService: CategoryService,
-    private val manufacturerService: ManufacturerService
+    private val manufacturerService: ManufacturerService,
+    private val stockService: StockService
 ) {
 
     @GetMapping
@@ -28,7 +30,8 @@ class ProductController(
                 manufacturingDate = product.manufacturingDate,
                 expirationDate = product.expirationDate,
                 category = product.category,
-                amount = product.amount
+                amount = product.amount,
+                stock = product.stock
             )
         }
 
@@ -46,7 +49,8 @@ class ProductController(
             manufacturingDate = product.manufacturingDate,
             expirationDate = product.expirationDate,
             category = product.category,
-            amount = product.amount
+            amount = product.amount,
+            stock = product.stock
         )
 
         return ResponseEntity.ok(productDto)
@@ -63,7 +67,8 @@ class ProductController(
             manufacturingDate = product.manufacturingDate,
             expirationDate = product.expirationDate,
             category = product.category,
-            amount = product.amount
+            amount = product.amount,
+            stock = product.stock
         )
 
         return ResponseEntity.ok(productDtoResultant)
@@ -80,7 +85,8 @@ class ProductController(
             manufacturingDate = product.manufacturingDate,
             expirationDate = product.expirationDate,
             category = product.category,
-            amount = product.amount
+            amount = product.amount,
+            stock = product.stock
         )
 
         return ResponseEntity.ok(productDtoResultant)
@@ -94,9 +100,14 @@ class ProductController(
     private fun mountProductDto(productDto: ProductDtoIn) : ProductDtoIn {
         val productCategory = productDto.categoryId?.let { productCategoryService.findById(it) }
         val manufacturer = productDto.manufacturerId?.let { manufacturerService.findById(it) }
+        val stock = productDto.stockId?.let { stockService.findById(it) }
+
         if (productCategory != null && manufacturer != null) {
             productDto.setProductCategory(productCategory)
             productDto.setProductManufacturer(manufacturer)
+            if (stock != null) {
+                productDto.setStockN(stock)
+            }
         }
         return productDto
     }

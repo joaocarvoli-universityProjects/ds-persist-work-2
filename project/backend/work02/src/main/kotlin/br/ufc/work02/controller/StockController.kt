@@ -18,7 +18,8 @@ class StockController(private val stockService: StockService, private val produc
             StockDtoOut(
                 id = stock.id,
                 name = stock.name,
-                products = stock.products
+                address = stock.address,
+                cep = stock.cep
             )
         }
 
@@ -31,7 +32,8 @@ class StockController(private val stockService: StockService, private val produc
         val stockDto = StockDtoOut(
             id = stock.id,
             name = stock.name,
-            products = stock.products
+            address = stock.address,
+            cep = stock.cep
         )
 
         return ResponseEntity.ok(stockDto)
@@ -39,21 +41,12 @@ class StockController(private val stockService: StockService, private val produc
 
     @PostMapping
     fun createStock(@RequestBody stockDto: StockDtoIn): ResponseEntity<StockDtoOut> {
-        val products = stockDto.productsIds.map {
-            if (it != null) {
-                productService.findById(it)
-            } else {
-                null
-            }
-        }
-
-        stockDto.setProducts(products.requireNoNulls())
-
         val stock = stockService.create(stockDto.toModel())
         val stockDtoResultant = StockDtoOut(
             id = stock.id,
             name = stock.name,
-            products = stock.products
+            address = stock.address,
+            cep = stock.cep
         )
 
         return ResponseEntity.ok(stockDtoResultant)
@@ -61,21 +54,12 @@ class StockController(private val stockService: StockService, private val produc
 
     @PutMapping("/{id}")
     fun updateStock(@PathVariable id: Long, @RequestBody stockDto: StockDtoIn): ResponseEntity<StockDtoOut> {
-        val products = stockDto.productsIds.map {
-            if (it != null) {
-                productService.findById(it)
-            } else {
-                null
-            }
-        }
-
-        stockDto.setProducts(products.requireNoNulls())
-
         val stock = stockService.update(id, stockDto.toModel())
         val stockDtoResultant = StockDtoOut(
             id = stock.id,
             name = stock.name,
-            products = stock.products
+            address = stock.address,
+            cep = stock.cep
         )
 
         return ResponseEntity.ok(stockDtoResultant)
