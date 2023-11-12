@@ -12,6 +12,28 @@ import java.util.*
 
 @Repository
 interface ProductRepository : JpaRepository<Product, Int>{
+
+    fun findByNameContainingIgnoreCase(name: String): List<Product>
+    fun findByManufacturerNameContainingIgnoreCase(name: String): List<Product>
+    fun findByCategoryNameContainingIgnoreCase(name: String): List<Product>
+    fun findByStockNameContainingIgnoreCase(name: String): List<Product>
+    @Query(name = "Product.findByPrice")
+    fun findByPrice(@Param("price") price: Double): List<Product>
+    @Query(name = "Product.findByPriceRange")
+    fun findByPriceRange(
+        @Param("priceInitial") priceInitial: Double,
+        @Param("priceFinal") priceFinal: Double
+    ): List<Product>
+
+    @Query(name = "Product.findByAmount")
+    fun findByAmount(@Param("amount") amount: Int): List<Product>
+
+    @Query(name = "Product.findByAmountRange")
+    fun findByAmountRange(
+        @Param("amountInitial") amountInitial: Int,
+        @Param("amountFinal") amountFinal: Int
+    ): List<Product>
+
     @Modifying
     @Query("update product p " +
             "set p.name = :name," +

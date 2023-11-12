@@ -8,6 +8,31 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ProductServiceImpl(private val productRepository: ProductRepository) : ProductService {
+    override fun findAllByFieldName(field: String, name: String): List<Product> {
+        when(field){
+            "Name" -> return productRepository.findByNameContainingIgnoreCase(name)
+            "ManufacturerName" -> return productRepository.findByManufacturerNameContainingIgnoreCase(name)
+            "CategoryName" -> return productRepository.findByCategoryNameContainingIgnoreCase(name)
+            "StockName" -> return productRepository.findByStockNameContainingIgnoreCase(name)
+        }
+        return listOf()
+    }
+
+    override fun findAllByPrice(price: Double): List<Product> {
+        return productRepository.findByPrice(price)
+    }
+
+    override fun findAllByPriceRange(priceInitial: Double, priceFinal: Double): List<Product> {
+        return productRepository.findByPriceRange(priceInitial, priceFinal)
+    }
+
+    override fun findAllByAmount(amount: Int): List<Product> {
+        return productRepository.findByAmount(amount)
+    }
+
+    override fun findAllByAmountRange(amountInitial: Int, amountFinal: Int): List<Product> {
+        return productRepository.findByAmountRange(amountInitial, amountFinal)
+    }
 
     @Transactional
     override fun findAll(): List<Product> {
