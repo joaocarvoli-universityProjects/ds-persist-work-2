@@ -2,7 +2,36 @@
     <h2>Fabricantes</h2>
 
     <!-- Manufacturer Table -->
-    <Table :columns="columns_manufacturer" :data-source="manufacturerItems" bordered>
+    <Table :columns="columns_manufacturer" :data-source="manufacturerItems" bordered @change="handleChange">
+
+      <template
+          #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
+      >
+        <template v-if="['name'].includes(column.dataIndex)">
+          <div style="padding: 8px">
+            <a-input
+                ref="searchInput"
+                :placeholder="`Buscar por ${filter_options_categories.filter((item) => item.key == column.dataIndex)[0].name}`"
+                :value="selectedKeys[0]"
+                style="width: 188px; margin-bottom: 8px; display: block"
+                @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+                @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"
+            />
+            <a-button
+                type="primary"
+                size="small"
+                style="width: 90px; margin-right: 8px"
+                @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
+            >
+              <template #icon><SearchOutlined /></template>
+              Search
+            </a-button>
+            <a-button size="small" style="width: 90px" @click="handleReset(clearFilters)">
+              Reset
+            </a-button>
+          </div>
+        </template>
+      </template>
       <template #bodyCell="{ column, text, record }">
         <template v-if="['name'].includes(column.dataIndex)">
           <div>
@@ -62,10 +91,10 @@
 <script setup lang="ts">
 import { useManufacturerStore } from "../stores/manufacturerStore.ts";
 import {onBeforeMount, reactive, ref, UnwrapRef} from "vue";
-import { Table, Input, Typography, Popconfirm } from "ant-design-vue";
+import {Table, Input, Typography, Popconfirm, TableProps} from "ant-design-vue";
 import { Manufacturer } from "../model/manufacturer.ts";
-import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons-vue";
-import { columns_manufacturer } from "../utils/tablesCols.ts";
+import {EditOutlined, DeleteOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons-vue";
+import {columns_manufacturer, filter_options_categories, filter_options_manufacturer} from "../utils/tablesCols.ts";
 
 const manufacturerStore = useManufacturerStore();
 const manufacturerItems = ref<Manufacturer[]>([]);
@@ -73,6 +102,16 @@ const modalVisible = ref<boolean>(false);
 
 async function getAllManufacturers() {
   const result = await manufacturerStore.getAllManufacturers();
+  manufacturerItems.value = result;
+}
+
+async function getAllManufacturersByFieldName(field: String, name: String){
+  const result = await manufacturerStore.getAllByName(field, name);
+  manufacturerItems.value = result;
+}
+
+async function orderByField(field: String, direction: String){
+  const result = await manufacturerStore.orderByField(field, direction);
   manufacturerItems.value = result;
 }
 
@@ -126,6 +165,41 @@ const formStateManufacturer = reactive<Manufacturer>({
   id: 0,
   name: ''
 });
+
+const state = reactive({
+  searchText: '',
+  searchedColumn: '',
+});
+
+const searchInput = ref();
+
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  confirm();
+  state.searchText = selectedKeys[0];
+  state.searchedColumn = dataIndex;
+  switch (dataIndex) {
+    case 'name':
+      const field = filter_options_manufacturer.filter((item) => item.key == dataIndex)[0].req
+      getAllManufacturersByFieldName(field, selectedKeys[0])
+      break
+  }
+}
+
+const handleChange: TableProps['onChange'] = (pagination, filters, sorter) => {
+  try {
+    let field = sorter['columnKey']
+    let order = sorter['order'].split('end')[0]
+
+    orderByField(field, order)
+  } catch (e) {console.log(e)}
+};
+
+
+const handleReset = clearFilters => {
+  clearFilters({ confirm: true });
+  state.searchText = '';
+  getAllManufacturers()
+};
 
 const handleOkButtonModal = () => {
   createManufacturer()

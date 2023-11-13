@@ -2,7 +2,37 @@
   <h2>Depósitos</h2>
 
   <!-- Manufacturer Table -->
-  <Table :columns="columns_stock" :data-source="stockItems" bordered>
+  <Table :columns="columns_stock" :data-source="stockItems" bordered @change="handleChange">
+    <template
+        #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
+    >
+      <template v-if="['name', 'address', 'cep'].includes(column.dataIndex)">
+        <div style="padding: 8px">
+          <a-input
+              ref="searchInput"
+              :placeholder="`Buscar por ${filter_options_stock.filter((item) => item.key == column.dataIndex)[0].name}`"
+              :value="selectedKeys[0]"
+              style="width: 188px; margin-bottom: 8px; display: block"
+              @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+              @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"
+          />
+          <a-button
+              type="primary"
+              size="small"
+              style="width: 90px; margin-right: 8px"
+              @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
+          >
+            <template #icon><SearchOutlined /></template>
+            Search
+          </a-button>
+          <a-button size="small" style="width: 90px" @click="handleReset(clearFilters)">
+            Reset
+          </a-button>
+        </div>
+      </template>
+
+    </template>
+
     <template #bodyCell="{ column, text, record }">
       <template v-if="['name', 'address', 'cep'].includes(column.dataIndex)">
         <div>
@@ -74,12 +104,15 @@
 
 <script setup lang="ts">
 import {onBeforeMount, reactive, ref, UnwrapRef} from "vue";
-import { Table, Input, Typography, Popconfirm } from "ant-design-vue";
+import {Table, Input, Typography, Popconfirm, TableProps} from "ant-design-vue";
 import { Manufacturer } from "../model/manufacturer.ts";
-import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons-vue";
+import {EditOutlined, DeleteOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons-vue";
 import {Stock} from "../model/stock.ts";
 import {useStockStore} from "../stores/stockStore.ts";
-import {columns_stock} from "../utils/tablesCols.ts";
+import {
+  columns_stock,
+  filter_options_stock
+} from "../utils/tablesCols.ts";
 
 const stockStore = useStockStore();
 const stockItems = ref<Stock[]>([]);
@@ -87,6 +120,16 @@ const modalVisible = ref<boolean>(false);
 
 async function getAllStocks() {
   const result = await stockStore.getAllStocks();
+  stockItems.value = result;
+}
+
+async function getAllProductsByFieldName(field: String, name: String){
+  const result = await stockStore.getAllByName(field, name);
+  stockItems.value = result;
+}
+
+async function orderByField(field: String, direction: String){
+  const result = await stockStore.orderByField(field, direction);
   stockItems.value = result;
 }
 
@@ -124,7 +167,6 @@ const save = (key: string) => {
       ),
       editableData[parseInt(key)]
   );
-  console.log("field: " + editableData[parseInt(key)])
   editStockById(editableData[parseInt(key)])
   delete editableData[parseInt(key)];
 };
@@ -143,6 +185,42 @@ const formStateManufacturer = reactive<Stock>({
   address: '',
   cep: ''
 });
+
+const state = reactive({
+  searchText: '',
+  searchedColumn: '',
+});
+
+const searchInput = ref();
+
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  confirm();
+  state.searchText = selectedKeys[0];
+  state.searchedColumn = dataIndex;
+  switch (dataIndex) {
+    case 'address':
+    case 'name':
+    case 'cep':
+      const field = filter_options_stock.filter((item) => item.key == dataIndex)[0].req
+      getAllProductsByFieldName(field, selectedKeys[0])
+      break
+  }
+}
+
+const handleChange: TableProps['onChange'] = (pagination, filters, sorter) => {
+  try {
+    let field = sorter['columnKey']
+    let order = sorter['order'].split('end')[0]
+
+    orderByField(field, order)
+  } catch (e) {console.log(e)}
+};
+
+const handleReset = clearFilters => {
+  clearFilters({ confirm: true });
+  state.searchText = '';
+  getAllStocks()
+};
 
 const handleOkButtonModal = () => {
   createStock()
