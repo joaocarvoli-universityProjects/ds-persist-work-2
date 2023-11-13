@@ -15,6 +15,29 @@ export const useStockStore = defineStore('Stock', () =>{
         }
     }
 
+    async function getAllByName(field: String, name: String): Promise<Stock[]> {
+        let stocks : Stock[] = []
+        try {
+            const { data } = await api.get(`/stock/name?field=${field}&name=${name}`)
+            console.log(field, name)
+            stocks = Object.values(data).map((product : any) => mapToStock(product))
+            return stocks
+        } catch (error){
+            return stocks
+        }
+    }
+
+    async function orderByField(field: String, direction: String){
+        let stocks : Stock[] = []
+        try {
+            const { data } = await api.get(`/stock/order?field=${field}&direction=${direction}`)
+            stocks = Object.values(data).map((product : any) => mapToStock(product))
+            return stocks
+        } catch (error){
+            return stocks
+        }
+    }
+
     async function createStock(stock: Stock): Promise<RequestFeedback> {
         let requestFeedback : RequestFeedback = {
             success : false,
@@ -73,5 +96,8 @@ export const useStockStore = defineStore('Stock', () =>{
         }
     }
 
-    return {getAllStocks, createStock, editStockById, removeStockById}
+    return {
+        getAllStocks, createStock, editStockById,
+        removeStockById, orderByField, getAllByName
+    }
 })

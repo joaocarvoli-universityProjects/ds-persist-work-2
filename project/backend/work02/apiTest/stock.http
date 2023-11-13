@@ -10,6 +10,8 @@ GET {{base_url}}/stock/address?address=Rua
 ### Get all products by its cep
 GET {{base_url}}/stock/cep?cep=60123
 
+### Get by field and order
+GET {{base_url}}/stock/order?field=name&direction=asc
 
 ### GET product category by id
 GET {{base_url}}/stock/1

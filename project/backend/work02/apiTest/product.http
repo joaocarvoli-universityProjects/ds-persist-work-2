@@ -19,6 +19,9 @@ GET {{base_url}}/product/amount?amount=1
 ### Get by product amount range
 GET {{base_url}}/product/amountRange?amountInitial=1&amountFinal=10
 
+### Get by field and order
+GET {{base_url}}/product/order?field=ManufacturerName&direction=desc
+
 ### POST create a product
 POST {{base_url}}/product
 Content-Type: application/json

@@ -1,7 +1,8 @@
 import {defineStore} from "pinia";
 import {api} from "../baseConfig.ts";
 import {Manufacturer} from "../model/manufacturer.ts";
-import {mapToManufacturer} from "../model/mappers.ts";
+import {mapToManufacturer, mapToStock} from "../model/mappers.ts";
+import {Stock} from "../model/stock.ts";
 
 export const useManufacturerStore = defineStore('Manufacturer', () => {
     async function getAllManufacturers(): Promise<Manufacturer[]> {
@@ -9,6 +10,30 @@ export const useManufacturerStore = defineStore('Manufacturer', () => {
         try {
             const { data } = await api.get("/manufacturer")
             manufacturers = Object.values(data).map((manufacturer : any) => mapToManufacturer(manufacturer))
+            return manufacturers
+        } catch (error){
+            return manufacturers
+        }
+    }
+
+    async function getAllByName(field: String, name: String): Promise<Manufacturer[]> {
+        let manufacturers : Manufacturer[] = []
+        try {
+            let query = `/manufacturer/name?field=${field}&name=${name}`
+            console.log(query)
+            const { data } = await api.get(`/manufacturer/name?field=${field}&name=${name}`)
+            manufacturers = Object.values(data).map((manufacturer : any) => mapToStock(manufacturer))
+            return manufacturers
+        } catch (error){
+            return manufacturers
+        }
+    }
+
+    async function orderByField(field: String, direction: String): Promise<Manufacturer[]> {
+        let manufacturers : Manufacturer[] = []
+        try {
+            const { data } = await api.get(`/manufacturer/order?field=${field}&direction=${direction}`)
+            manufacturers = Object.values(data).map((manufacturer : any) => mapToStock(manufacturer))
             return manufacturers
         } catch (error){
             return manufacturers
@@ -81,5 +106,8 @@ export const useManufacturerStore = defineStore('Manufacturer', () => {
         }
     }
 
-    return {createManufacturer, getAllManufacturers, editManufacturerById, removeManufacturerById }
+    return {
+        createManufacturer, getAllManufacturers, editManufacturerById,
+        removeManufacturerById, getAllByName, orderByField
+    }
 })

@@ -2,6 +2,8 @@ package br.ufc.work02.controller
 
 import br.ufc.work02.controller.dto.ManufacturerDto
 import br.ufc.work02.service.ManufacturerService
+import org.springframework.data.domain.Sort
+import org.springframework.data.repository.query.Param
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -20,6 +22,18 @@ class ManufacturerController(private val manufacturerService: ManufacturerServic
     fun findAllByName(@RequestParam("name") name: String) : ResponseEntity<List<ManufacturerDto>> {
         val manufacturers = manufacturerService.findAllByName(name)
         val manufacturerDtos = manufacturers.map { ManufacturerDto(it) }
+        return ResponseEntity.ok(manufacturerDtos)
+    }
+
+    @GetMapping("/order")
+    fun orderByFieldByDirection(@Param("field") field: String, @Param("direction") direction: String) : ResponseEntity<List<ManufacturerDto>>{
+        val manufacturers = when(direction){
+            "asc" -> manufacturerService.findAllOrderedByField(field, Sort.Direction.ASC)
+            "desc" -> manufacturerService.findAllOrderedByField(field, Sort.Direction.DESC)
+            else -> listOf()
+        }
+        val manufacturerDtos = manufacturers.map { ManufacturerDto(it) }
+
         return ResponseEntity.ok(manufacturerDtos)
     }
 

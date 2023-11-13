@@ -3,7 +3,37 @@
   <h2>Categorias de Produto</h2>
 
   <!-- Categories Table -->
-  <Table :columns="columns_category" :data-source="categoryItems" bordered>
+  <a-table :columns="columns_category" :data-source="categoryItems" bordered @change="handleChange">
+
+    <template
+        #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
+    >
+      <template v-if="['name'].includes(column.dataIndex)">
+        <div style="padding: 8px">
+          <a-input
+              ref="searchInput"
+              :placeholder="`Buscar por ${filter_options_categories.filter((item) => item.key == column.dataIndex)[0].name}`"
+              :value="selectedKeys[0]"
+              style="width: 188px; margin-bottom: 8px; display: block"
+              @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+              @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"
+          />
+          <a-button
+              type="primary"
+              size="small"
+              style="width: 90px; margin-right: 8px"
+              @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
+          >
+            <template #icon><SearchOutlined /></template>
+            Search
+          </a-button>
+          <a-button size="small" style="width: 90px" @click="handleReset(clearFilters)">
+            Reset
+          </a-button>
+        </div>
+      </template>
+
+    </template>
     <template #bodyCell="{ column, text, record }">
       <template v-if="['name'].includes(column.dataIndex)">
         <div>
@@ -35,7 +65,7 @@
         </div>
       </template>
     </template>
-  </Table>
+  </a-table>
 
   <!-- Floating Button and Modal -->
   <div id="components-modal-demo-position">
@@ -64,9 +94,14 @@
 <script setup lang="ts">
 
 import {onBeforeMount, reactive, ref, UnwrapRef} from "vue";
-import { Table, Input, Typography, Popconfirm } from "ant-design-vue";
-import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons-vue";
-import {columns_category} from "../utils/tablesCols.ts";
+import { Input, Typography, Popconfirm, TableProps} from "ant-design-vue";
+import {EditOutlined, DeleteOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons-vue";
+import {
+  columns_category,
+  filter_options_categories,
+  filter_options_products,
+  filter_options_stock
+} from "../utils/tablesCols.ts";
 import {useCategoryStore} from "../stores/categoryStore.ts";
 import {Category} from "../model/category.ts";
 
@@ -76,9 +111,17 @@ const modalVisible = ref<boolean>(false);
 
 async function getAllCategories() {
   const result = await categoryStore.getAllCategories();
-  console.log(result)
   categoryItems.value = result;
-  console.log(categoryItems.value)
+}
+
+async function getAllProductsByFieldName(field: String, name: String){
+  const result = await categoryStore.getAllByName(field, name);
+  categoryItems.value = result;
+}
+
+async function orderByField(field: String, direction: String){
+  const result = await categoryStore.orderByField(field, direction);
+  categoryItems.value = result;
 }
 
 async function createCategory(){
@@ -131,6 +174,43 @@ const formStateManufacturer = reactive<Category>({
   id: 0,
   name: ''
 });
+
+const state = reactive({
+  searchText: '',
+  searchedColumn: '',
+});
+
+const searchInput = ref();
+
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  confirm();
+  state.searchText = selectedKeys[0];
+  state.searchedColumn = dataIndex;
+  switch (dataIndex) {
+    case 'name':
+      const field = filter_options_categories.filter((item) => item.key == dataIndex)[0].req
+      console.log(field, selectedKeys[0])
+      getAllProductsByFieldName(field, selectedKeys[0])
+      break
+  }
+}
+
+const handleChange: TableProps['onChange'] = (pagination, filters, sorter) => {
+  try {
+    let field = sorter['columnKey']
+    let order = sorter['order'].split('end')[0]
+
+    orderByField(field, order)
+  } catch (e) {console.log(e)}
+};
+
+
+const handleReset = clearFilters => {
+  clearFilters({ confirm: true });
+  state.searchText = '';
+  getAllCategories()
+};
+
 
 const handleOkButtonModal = () => {
   createCategory()

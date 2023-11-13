@@ -3,6 +3,7 @@ package br.ufc.work02.service.impl
 import br.ufc.work02.domain.model.Stock
 import br.ufc.work02.domain.repository.StockRepository
 import br.ufc.work02.service.StockService
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 @Service
@@ -21,6 +22,11 @@ class StockServiceImpl(private val stockRepository: StockRepository) : StockServ
 
     override fun findAllByCep(cep: String): List<Stock> {
         return stockRepository.findAllByCep(cep)
+    }
+
+    override fun findAllOrderedByField(field: String, direction: Sort.Direction): List<Stock> {
+        val sort: Sort = Sort.by(direction, field)
+        return stockRepository.findAllOrderedByField(field, sort)
     }
 
     override fun findById(id: Long): Stock {

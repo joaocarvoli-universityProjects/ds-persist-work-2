@@ -3,6 +3,7 @@ package br.ufc.work02.domain.repository
 import br.ufc.work02.domain.model.Category
 import br.ufc.work02.domain.model.Manufacturer
 import br.ufc.work02.domain.model.Product
+import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -12,6 +13,7 @@ import java.util.*
 
 @Repository
 interface ProductRepository : JpaRepository<Product, Int>{
+
 
     fun findByNameContainingIgnoreCase(name: String): List<Product>
     fun findByManufacturerNameContainingIgnoreCase(name: String): List<Product>
@@ -54,4 +56,19 @@ interface ProductRepository : JpaRepository<Product, Int>{
         @Param(value = "category") category: Category,
         @Param(value = "amount") amount: Int
         )
+
+    @Query("select p from product p")
+    fun findAllOrderedByField(@Param("field") field: String, sort: Sort): List<Product>
+
+    @Query("select p from product p order by p.manufacturer.name asc")
+    fun findAllManufacturerOrderedByAsc(): List<Product>
+
+    @Query("select p from product p order by p.manufacturer.name desc")
+    fun findAllManufacturerOrderedByDesc(): List<Product>
+
+    @Query("select p from product p order by p.category.name asc")
+    fun findAllCategoryOrderedByAsc(): List<Product>
+
+    @Query("select p from product p order by p.category.name desc")
+    fun findAllCategoryOrderedByDesc(): List<Product>
 }

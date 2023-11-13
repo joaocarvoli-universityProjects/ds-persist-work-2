@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {Manufacturer} from "../model/manufacturer.ts";
 import {api} from "../baseConfig.ts";
-import {mapToCategory} from "../model/mappers.ts";
+import {mapToCategory, mapToProduct} from "../model/mappers.ts";
 import {Category} from "../model/category.ts";
 
 export const useCategoryStore = defineStore('Category', () => {
@@ -10,6 +10,28 @@ export const useCategoryStore = defineStore('Category', () => {
         try {
             const { data } = await api.get("/product-category")
             categories = Object.values(data).map((category : any) => mapToCategory(category))
+            return categories
+        } catch (error){
+            return categories
+        }
+    }
+
+    async function getAllByName(field: String, name: String): Promise<Category[]> {
+        let categories : Category[] = []
+        try {
+            const { data } = await api.get(`/product-category/name?field=${field}&name=${name}`)
+            categories = Object.values(data).map((product : any) => mapToCategory(product))
+            return categories
+        } catch (error){
+            return categories
+        }
+    }
+
+    async function orderByField(field: String, direction: String){
+        let categories : Category[] = []
+        try {
+            const { data } = await api.get(`/product-category/order?field=${field}&direction=${direction}`)
+            categories = Object.values(data).map((product : any) => mapToProduct(product))
             return categories
         } catch (error){
             return categories
@@ -70,5 +92,7 @@ export const useCategoryStore = defineStore('Category', () => {
         }
     }
 
-    return {createCategory, getAllCategories, editCategoryById, removeCategoryById }
+    return {
+        createCategory, getAllCategories, editCategoryById,
+        removeCategoryById, orderByField, getAllByName }
 })
