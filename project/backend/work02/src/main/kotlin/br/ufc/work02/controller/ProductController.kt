@@ -7,6 +7,8 @@ import br.ufc.work02.service.CategoryService
 import br.ufc.work02.service.ManufacturerService
 import br.ufc.work02.service.ProductService
 import br.ufc.work02.service.StockService
+import org.springframework.data.domain.Sort
+import org.springframework.data.repository.query.Param
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -105,6 +107,18 @@ class ProductController(
         val productsDto = productsToProductsDtoOut(products)
 
         return ResponseEntity.ok(productsDto)
+    }
+
+    @GetMapping("/order")
+    fun orderByFieldByDirection(@Param("field") field: String, @Param("direction") direction: String) : ResponseEntity<List<ProductDtoOut>>{
+        val products = when(direction){
+            "asc" -> productService.findAllOrderedByField(field, Sort.Direction.ASC)
+            "desc" -> productService.findAllOrderedByField(field, Sort.Direction.DESC)
+            else -> listOf()
+        }
+        val productsDtos = productsToProductsDtoOut(products)
+
+        return ResponseEntity.ok(productsDtos)
     }
 
     @GetMapping("/{id}")

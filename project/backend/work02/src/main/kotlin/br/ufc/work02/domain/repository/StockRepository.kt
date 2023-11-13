@@ -1,6 +1,7 @@
 package br.ufc.work02.domain.repository
 
 import br.ufc.work02.domain.model.Stock
+import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -17,4 +18,7 @@ interface StockRepository : JpaRepository<Stock, Int> {
 
     @Query("SELECT s FROM Stock s WHERE upper(s.cep) LIKE upper(concat('%',:cep,'%'))")
     fun findAllByCep(@Param("cep") cep: String): List<Stock>
+
+    @Query("select s from Stock s")
+    fun findAllOrderedByField(@Param("field") field: String, sort: Sort): List<Stock>
 }

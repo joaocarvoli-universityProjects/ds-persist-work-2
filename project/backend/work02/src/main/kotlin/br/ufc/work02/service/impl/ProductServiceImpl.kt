@@ -3,11 +3,29 @@ package br.ufc.work02.service.impl
 import br.ufc.work02.domain.model.Product
 import br.ufc.work02.domain.repository.ProductRepository
 import br.ufc.work02.service.ProductService
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ProductServiceImpl(private val productRepository: ProductRepository) : ProductService {
+
+    override fun findAllOrderedByField(field: String, direction: Sort.Direction): List<Product> {
+        val sort: Sort = Sort.by(direction, field)
+
+        return when(field){
+            "category" -> {
+                if(direction == Sort.Direction.ASC) productRepository.findAllCategoryOrderedByAsc()
+                else productRepository.findAllCategoryOrderedByDesc()
+            }
+            "manufacturer" -> {
+                if(direction == Sort.Direction.ASC) productRepository.findAllManufacturerOrderedByAsc()
+                else productRepository.findAllManufacturerOrderedByDesc()
+            }
+            else -> productRepository.findAllOrderedByField(field, sort)
+        }
+    }
+
     override fun findAllByFieldName(field: String, name: String): List<Product> {
         when(field){
             "Name" -> return productRepository.findByNameContainingIgnoreCase(name)

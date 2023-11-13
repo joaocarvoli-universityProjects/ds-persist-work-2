@@ -2,6 +2,8 @@ package br.ufc.work02.controller
 
 import br.ufc.work02.controller.dto.CategoryDto
 import br.ufc.work02.service.CategoryService
+import org.springframework.data.domain.Sort
+import org.springframework.data.repository.query.Param
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -20,6 +22,18 @@ class CategoryController(private val productCategoryService: CategoryService) {
     fun findAllByName(@RequestParam("name") name: String) : ResponseEntity<List<CategoryDto>> {
         val productsCategories = productCategoryService.findAllByName(name)
         val productsCategoriesDto = productsCategories.map { CategoryDto(it) }
+        return ResponseEntity.ok(productsCategoriesDto)
+    }
+
+    @GetMapping("/order")
+    fun orderByFieldByDirection(@Param("field") field: String, @Param("direction") direction: String) : ResponseEntity<List<CategoryDto>>{
+        val productsCategories = when(direction){
+            "asc" -> productCategoryService.findAllOrderedByField(field, Sort.Direction.ASC)
+            "desc" -> productCategoryService.findAllOrderedByField(field, Sort.Direction.DESC)
+            else -> listOf()
+        }
+        val productsCategoriesDto = productsCategories.map { CategoryDto(it) }
+
         return ResponseEntity.ok(productsCategoriesDto)
     }
 

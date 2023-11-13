@@ -3,6 +3,7 @@ package br.ufc.work02.service.impl
 import br.ufc.work02.domain.model.Category
 import br.ufc.work02.domain.repository.CategoryRepository
 import br.ufc.work02.service.CategoryService
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -10,6 +11,11 @@ import org.springframework.transaction.annotation.Transactional
 class CategoryServiceImpl(private val productCategoryRepository: CategoryRepository) : CategoryService {
     override fun findAllByName(name: String): List<Category> {
         return productCategoryRepository.findAllByName(name)
+    }
+
+    override fun findAllOrderedByField(field: String, direction: Sort.Direction): List<Category> {
+        val sort: Sort = Sort.by(direction, field)
+        return productCategoryRepository.findAllOrderedByField(field, sort)
     }
 
     @Transactional

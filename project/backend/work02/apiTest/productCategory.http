@@ -4,6 +4,9 @@ GET {{base_url}}/product-category
 ### Get all by its name
 GET {{base_url}}/product-category/name?name=c
 
+### Get by field and order
+GET {{base_url}}/product-category/order?field=name&direction=desc
+
 ### GET product category by id
 GET {{base_url}}/product-category/1
 
