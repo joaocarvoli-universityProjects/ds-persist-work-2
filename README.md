@@ -4,6 +4,8 @@
 
 ## Screenshots
 
+![](./docs/demonstration.gif)
+
 ## Specifications
 
 ### Technologies
