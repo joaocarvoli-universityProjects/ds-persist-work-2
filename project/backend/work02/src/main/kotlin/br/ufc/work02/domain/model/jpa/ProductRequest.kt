@@ -1,14 +1,17 @@
-package br.ufc.work02.domain.model
+package br.ufc.work02.domain.model.jpa
 
 import jakarta.persistence.*
 
-@Entity(name = "product_category")
-data class Category(
+@Entity
+data class ProductRequest(
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
 
+    @OneToOne
+    var product: Product,
+
     @Column
-    var name: String
+    var amount : Int
 )

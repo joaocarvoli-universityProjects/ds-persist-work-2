@@ -34,6 +34,10 @@ dependencies {
 	implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.1.5")
+
+	// Mongodb
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb:3.2.0")
 }
 
 tasks.withType<KotlinCompile> {

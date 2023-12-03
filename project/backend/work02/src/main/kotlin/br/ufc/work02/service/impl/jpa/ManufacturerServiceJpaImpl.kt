@@ -1,13 +1,13 @@
-package br.ufc.work02.service.impl
+package br.ufc.work02.service.impl.jpa
 
-import br.ufc.work02.domain.model.Manufacturer
-import br.ufc.work02.domain.repository.ManufacturerRepository
+import br.ufc.work02.domain.model.jpa.Manufacturer
+import br.ufc.work02.domain.repository.jpa.ManufacturerJpaRepository
 import br.ufc.work02.service.ManufacturerService
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 @Service
-class ManufacturerServiceImpl(private val manufacturerRepository: ManufacturerRepository) : ManufacturerService {
+class ManufacturerServiceJpaImpl(private val manufacturerRepository: ManufacturerJpaRepository) : ManufacturerService<Manufacturer, Long> {
     override fun findAllByName(name: String): List<Manufacturer> {
         return manufacturerRepository.findAllByName(name)
     }

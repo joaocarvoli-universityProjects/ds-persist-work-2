@@ -1,11 +1,11 @@
 package br.ufc.work02.service
 
-import br.ufc.work02.domain.model.Stock
+import br.ufc.work02.domain.model.jpa.Stock
 import org.springframework.data.domain.Sort
 
-interface StockService : GenericCrudService<Stock, Long> {
-    fun findAllByName(name: String): List<Stock>
-    fun findAllByAddress(address: String): List<Stock>
-    fun findAllByCep(cep: String): List<Stock>
-    fun findAllOrderedByField(field: String, direction: Sort.Direction): List<Stock>
+interface StockService<T, ID> : GenericCrudService<T, ID> {
+    fun findAllByName(name: String): List<T>
+    fun findAllByAddress(address: String): List<T>
+    fun findAllByCep(cep: String): List<T>
+    fun findAllOrderedByField(field: String, direction: Sort.Direction): List<T>
 }

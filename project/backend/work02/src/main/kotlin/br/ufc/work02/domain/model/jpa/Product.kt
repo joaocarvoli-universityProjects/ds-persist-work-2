@@ -1,4 +1,4 @@
-package br.ufc.work02.domain.model
+package br.ufc.work02.domain.model.jpa
 
 import jakarta.persistence.*
 import java.util.*

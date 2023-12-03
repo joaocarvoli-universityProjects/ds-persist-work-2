@@ -1,7 +1,6 @@
 package br.ufc.work02.controller.dto
 
-import br.ufc.work02.domain.model.Category
-import br.ufc.work02.domain.model.GenericDto
+import br.ufc.work02.domain.model.jpa.Category
 
 data class CategoryDto(
         val id: Long?,

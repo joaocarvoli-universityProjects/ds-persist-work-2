@@ -1,6 +1,9 @@
 package br.ufc.work02.controller.dto
 
-import br.ufc.work02.domain.model.*
+import br.ufc.work02.domain.model.jpa.Category
+import br.ufc.work02.domain.model.jpa.Manufacturer
+import br.ufc.work02.domain.model.jpa.Product
+import br.ufc.work02.domain.model.jpa.Stock
 import java.util.*
 
 data class ProductDtoIn(

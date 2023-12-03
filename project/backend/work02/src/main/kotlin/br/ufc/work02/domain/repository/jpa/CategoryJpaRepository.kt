@@ -1,6 +1,6 @@
-package br.ufc.work02.domain.repository
+package br.ufc.work02.domain.repository.jpa
 
-import br.ufc.work02.domain.model.Category
+import br.ufc.work02.domain.model.jpa.Category
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -8,8 +8,8 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 
-@Repository
-interface CategoryRepository : JpaRepository<Category, Int> {
+@Repository("jpaCategoryRepository")
+interface CategoryJpaRepository : JpaRepository<Category, Long> {
     @Query(value = "SELECT * FROM product_category m WHERE UPPER(m.name) LIKE UPPER(CONCAT('%', :name, '%'))", nativeQuery = true)
     fun findAllByName(@Param("name") name: String): List<Category>
 

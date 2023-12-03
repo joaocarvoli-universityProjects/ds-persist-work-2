@@ -1,14 +1,14 @@
-package br.ufc.work02.domain.repository
+package br.ufc.work02.domain.repository.jpa
 
-import br.ufc.work02.domain.model.Stock
+import br.ufc.work02.domain.model.jpa.Stock
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
-@Repository
-interface StockRepository : JpaRepository<Stock, Int> {
+@Repository("jpaStockRepository")
+interface StockJpaRepository : JpaRepository<Stock, Int> {
     @Query("SELECT s FROM Stock s WHERE upper(s.name) LIKE upper(concat('%', :name, '%'))")
     fun findAllByName(@Param("name") name: String): List<Stock>
 

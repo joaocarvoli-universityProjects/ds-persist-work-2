@@ -1,9 +1,9 @@
-package br.ufc.work02.domain.model
+package br.ufc.work02.domain.model.jpa
 
 import jakarta.persistence.*
 
-@Entity
-data class Manufacturer(
+@Entity(name = "product_category")
+data class Category(
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)

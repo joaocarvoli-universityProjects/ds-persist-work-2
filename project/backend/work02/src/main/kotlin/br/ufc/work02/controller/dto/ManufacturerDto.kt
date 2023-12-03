@@ -1,7 +1,6 @@
 package br.ufc.work02.controller.dto
 
-import br.ufc.work02.domain.model.GenericDto
-import br.ufc.work02.domain.model.Manufacturer
+import br.ufc.work02.domain.model.jpa.Manufacturer
 
 data class ManufacturerDto(
     val id: Long?,

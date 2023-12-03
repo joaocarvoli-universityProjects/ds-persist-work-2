@@ -1,8 +1,8 @@
-package br.ufc.work02.domain.repository
+package br.ufc.work02.domain.repository.jpa
 
-import br.ufc.work02.domain.model.Category
-import br.ufc.work02.domain.model.Manufacturer
-import br.ufc.work02.domain.model.Product
+import br.ufc.work02.domain.model.jpa.Category
+import br.ufc.work02.domain.model.jpa.Manufacturer
+import br.ufc.work02.domain.model.jpa.Product
 import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
@@ -11,8 +11,8 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.util.*
 
-@Repository
-interface ProductRepository : JpaRepository<Product, Int>{
+@Repository("jpaProductRepository")
+interface ProductJpaRepository : JpaRepository<Product, Int>{
 
 
     fun findByNameContainingIgnoreCase(name: String): List<Product>

@@ -1,13 +1,13 @@
-package br.ufc.work02.service.impl
+package br.ufc.work02.service.impl.jpa
 
-import br.ufc.work02.domain.model.Stock
-import br.ufc.work02.domain.repository.StockRepository
+import br.ufc.work02.domain.model.jpa.Stock
+import br.ufc.work02.domain.repository.jpa.StockJpaRepository
 import br.ufc.work02.service.StockService
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
 @Service
-class StockServiceImpl(private val stockRepository: StockRepository) : StockService {
+class StockServiceJpaImpl(private val stockRepository: StockJpaRepository) : StockService<Stock, Long> {
     override fun findAll(): List<Stock> {
         return stockRepository.findAll()
     }

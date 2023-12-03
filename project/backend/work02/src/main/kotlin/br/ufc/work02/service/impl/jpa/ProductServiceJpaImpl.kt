@@ -1,14 +1,14 @@
-package br.ufc.work02.service.impl
+package br.ufc.work02.service.impl.jpa
 
-import br.ufc.work02.domain.model.Product
-import br.ufc.work02.domain.repository.ProductRepository
+import br.ufc.work02.domain.model.jpa.Product
+import br.ufc.work02.domain.repository.jpa.ProductJpaRepository
 import br.ufc.work02.service.ProductService
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class ProductServiceImpl(private val productRepository: ProductRepository) : ProductService {
+class ProductServiceJpaImpl(private val productRepository: ProductJpaRepository) : ProductService<Product, Long> {
 
     override fun findAllOrderedByField(field: String, direction: Sort.Direction): List<Product> {
         val sort: Sort = Sort.by(direction, field)

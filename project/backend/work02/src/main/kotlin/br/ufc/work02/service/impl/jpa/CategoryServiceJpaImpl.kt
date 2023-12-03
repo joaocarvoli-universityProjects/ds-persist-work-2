@@ -1,14 +1,14 @@
-package br.ufc.work02.service.impl
+package br.ufc.work02.service.impl.jpa
 
-import br.ufc.work02.domain.model.Category
-import br.ufc.work02.domain.repository.CategoryRepository
+import br.ufc.work02.domain.model.jpa.Category
+import br.ufc.work02.domain.repository.jpa.CategoryJpaRepository
 import br.ufc.work02.service.CategoryService
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class CategoryServiceImpl(private val productCategoryRepository: CategoryRepository) : CategoryService {
+class CategoryServiceJpaImpl(private val productCategoryRepository: CategoryJpaRepository) : CategoryService<Category, Long> {
     override fun findAllByName(name: String): List<Category> {
         return productCategoryRepository.findAllByName(name)
     }
@@ -25,7 +25,7 @@ class CategoryServiceImpl(private val productCategoryRepository: CategoryReposit
 
     @Transactional
     override fun findById(id: Long): Category {
-        return productCategoryRepository.getReferenceById(id.toInt())
+        return productCategoryRepository.getReferenceById(id)
     }
 
     @Transactional
@@ -35,7 +35,7 @@ class CategoryServiceImpl(private val productCategoryRepository: CategoryReposit
 
     @Transactional
     override fun update(id: Long, model: Category): Category {
-        val productCategory = productCategoryRepository.getReferenceById(id.toInt())
+        val productCategory = productCategoryRepository.getReferenceById(id)
 
         productCategory.name = model.name
 
@@ -44,6 +44,6 @@ class CategoryServiceImpl(private val productCategoryRepository: CategoryReposit
 
     @Transactional
     override fun delete(id: Long) {
-        productCategoryRepository.deleteById(id.toInt())
+        productCategoryRepository.deleteById(id)
     }
 }

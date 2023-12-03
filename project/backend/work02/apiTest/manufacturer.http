@@ -2,7 +2,7 @@
 GET {{base_url}}/manufacturer
 
 ### Get all products by its name
-GET {{base_url}}/manufacturer/name?name=y
+GET {{base_url}}/manufacturer/name?name=Pro
 
 ### Get by field and order
 GET {{base_url}}/manufacturer/order?field=name&direction=asc
