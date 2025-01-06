@@ -132,17 +132,17 @@ class ProductController(
     @PostMapping
     fun createProduct(@RequestBody productDto: ProductDtoIn) : ResponseEntity<ProductDtoOut> {
         val product = productService.create(mountProductDto(productDto).toModel())
-        val productDto = productToProductDtoOut(product)
+        val productDtoResult = productToProductDtoOut(product)
 
-        return ResponseEntity.ok(productDto)
+        return ResponseEntity.ok(productDtoResult)
     }
 
     @PutMapping("/{id}")
     fun updateProduct(@PathVariable id: Long, @RequestBody productDto: ProductDtoIn) : ResponseEntity<ProductDtoOut> {
         val product = productService.update(id, mountProductDto(productDto).toModel())
-        val productDto = productToProductDtoOut(product)
+        val productDtoResult = productToProductDtoOut(product)
 
-        return ResponseEntity.ok(productDto)
+        return ResponseEntity.ok(productDtoResult)
     }
 
     @DeleteMapping("/{id}")
