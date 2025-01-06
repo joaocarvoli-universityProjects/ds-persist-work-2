@@ -1,6 +1,19 @@
-version: '3.5'
-
 services:
+  work02:
+    container_name: application
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres_container:5432/postgres"
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    depends_on:
+      - postgres
+    networks:
+      - postgres
+    restart: unless-stopped
+
   postgres:
     container_name: postgres_container
     image: postgres
