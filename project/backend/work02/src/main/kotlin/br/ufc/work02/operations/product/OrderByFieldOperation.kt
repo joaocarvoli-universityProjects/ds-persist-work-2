@@ -1,4 +1,4 @@
-package br.ufc.work02.OCP
+package br.ufc.work02.operations.product
 
 import br.ufc.work02.domain.model.Product
 import br.ufc.work02.service.ProductService

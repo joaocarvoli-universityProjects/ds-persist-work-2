@@ -1,9 +1,9 @@
 package br.ufc.work02.controller
 
-import br.ufc.work02.OCP.ProductOperation
 import br.ufc.work02.controller.dto.ProductDtoIn
 import br.ufc.work02.controller.dto.ProductDtoOut
 import br.ufc.work02.mapper.ProductMapper
+import br.ufc.work02.operations.product.ProductOperation
 import br.ufc.work02.service.ProductService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
