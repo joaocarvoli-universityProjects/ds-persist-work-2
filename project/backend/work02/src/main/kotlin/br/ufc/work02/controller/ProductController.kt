@@ -1,200 +1,77 @@
 package br.ufc.work02.controller
 
+import br.ufc.work02.OCP.ProductOperation
 import br.ufc.work02.controller.dto.ProductDtoIn
 import br.ufc.work02.controller.dto.ProductDtoOut
-import br.ufc.work02.domain.model.Product
-import br.ufc.work02.service.CategoryService
-import br.ufc.work02.service.ManufacturerService
+import br.ufc.work02.mapper.ProductMapper
 import br.ufc.work02.service.ProductService
-import br.ufc.work02.service.StockService
-import org.springframework.data.domain.Sort
-import org.springframework.data.repository.query.Param
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/product")
 class ProductController(
-    private val productService: ProductService,
-    private val productCategoryService: CategoryService,
-    private val manufacturerService: ManufacturerService,
-    private val stockService: StockService
+        private val productService: ProductService,
+        private val productMapper: ProductMapper,
+        private val operations: List<ProductOperation>
 ) {
 
-    @GetMapping
-    fun findAllProducts() : ResponseEntity<List<ProductDtoOut>>{
-        val products = productService.findAll()
-        val productsDto = products.map { product ->
-            ProductDtoOut(
-                id = product.id,
-                name = product.name,
-                price = product.price,
-                manufacturer = product.manufacturer,
-                manufacturingDate = product.manufacturingDate,
-                expirationDate = product.expirationDate,
-                category = product.category,
-                amount = product.amount,
-                stock = product.stock
-            )
-        }
-
-        return ResponseEntity.ok(productsDto)
-    }
-
-    @GetMapping("name")
-    fun findAllByNameField(@RequestParam("field") field: String, @RequestParam("name") name: String): ResponseEntity<List<ProductDtoOut>> {
-        val products = productService.findAllByFieldName(field, name)
-        val productsDto = products.map { product ->
-            ProductDtoOut(
-                id = product.id,
-                name = product.name,
-                price = product.price,
-                manufacturer = product.manufacturer,
-                manufacturingDate = product.manufacturingDate,
-                expirationDate = product.expirationDate,
-                category = product.category,
-                amount = product.amount,
-                stock = product.stock
-            )
-        }
-
-        return ResponseEntity.ok(productsDto)
-    }
-
-    @GetMapping("price")
-    fun findAllByPrice(@RequestParam("price") price: Double): ResponseEntity<List<ProductDtoOut>> {
-        val products = productService.findAllByPrice(price)
-        val productsDto = products.map { product ->
-            ProductDtoOut(
-                id = product.id,
-                name = product.name,
-                price = product.price,
-                manufacturer = product.manufacturer,
-                manufacturingDate = product.manufacturingDate,
-                expirationDate = product.expirationDate,
-                category = product.category,
-                amount = product.amount,
-                stock = product.stock
-            )
-        }
-
-        return ResponseEntity.ok(productsDto)
-    }
-
-    @GetMapping("priceRange")
-    fun findAllByPriceRange(@RequestParam("priceInitial") priceInitial: Double,
-                            @RequestParam("priceFinal") priceFinal: Double
-                            ): ResponseEntity<List<ProductDtoOut>> {
-        val products = productService.findAllByPriceRange(priceInitial, priceFinal)
-        val productsDto = productsToProductsDtoOut(products)
-
-        return ResponseEntity.ok(productsDto)
-    }
-
-    @GetMapping("amount")
-    fun findAllByAmount(@RequestParam("amount") amount: Int): ResponseEntity<List<ProductDtoOut>> {
-        val products = productService.findAllByAmount(amount)
-        val productsDto = productsToProductsDtoOut(products)
-
-        return ResponseEntity.ok(productsDto)
-    }
-
-    @GetMapping("amountRange")
-    fun findAllByAmountRange(@RequestParam("amountInitial") amountInitial: Int,
-                             @RequestParam("amountFinal") amountFinal: Int
+    @GetMapping("/operation")
+    fun executeOperation(
+            @RequestParam operation: String,
+            @RequestParam params: Map<String, String?>
     ): ResponseEntity<List<ProductDtoOut>> {
-        val products = productService.findAllByAmountRange(amountInitial, amountFinal)
-        val productsDto = productsToProductsDtoOut(products)
+        val strategy =
+                operations.find { it.supports(operation) }
+                        ?: throw IllegalArgumentException("Operation not supported: $operation")
 
+        val products = strategy.execute(params, productService)
+        val productsDto = productMapper.toDtoList(products)
         return ResponseEntity.ok(productsDto)
     }
 
-    @GetMapping("/order")
-    fun orderByFieldByDirection(@Param("field") field: String, @Param("direction") direction: String) : ResponseEntity<List<ProductDtoOut>>{
-        val products = when(direction){
-            "asc" -> productService.findAllOrderedByField(field, Sort.Direction.ASC)
-            "desc" -> productService.findAllOrderedByField(field, Sort.Direction.DESC)
-            else -> listOf()
-        }
-        val productsDtos = productsToProductsDtoOut(products)
-
-        return ResponseEntity.ok(productsDtos)
+    @GetMapping
+    fun findAllProducts(): ResponseEntity<List<ProductDtoOut>> {
+        val products = productService.findAll()
+        val productsDto = productMapper.toDtoList(products)
+        return ResponseEntity.ok(productsDto)
     }
 
     @GetMapping("/{id}")
-    fun findProductById(@PathVariable id : Long) : ResponseEntity<ProductDtoOut> {
+    fun findProductById(@PathVariable id: Long): ResponseEntity<ProductDtoOut> {
         val product = productService.findById(id)
-        val productDto = productToProductDtoOut(product)
-
+        val productDto = productMapper.toDto(product)
         return ResponseEntity.ok(productDto)
     }
 
     @PostMapping
-    fun createProduct(@RequestBody productDto: ProductDtoIn) : ResponseEntity<ProductDtoOut> {
-        val product = productService.create(mountProductDto(productDto).toModel())
-        val productDto = productToProductDtoOut(product)
-
-        return ResponseEntity.ok(productDto)
+    fun createProduct(@RequestBody productDtoIn: ProductDtoIn): ResponseEntity<ProductDtoOut> {
+        val product = productMapper.toEntity(productDtoIn)
+        if (product == null) {
+            return ResponseEntity.badRequest().build()
+        }
+        val savedProduct = productService.create(product)
+        val productDtoOut = productMapper.toDto(savedProduct)
+        return ResponseEntity.ok(productDtoOut)
     }
 
     @PutMapping("/{id}")
-    fun updateProduct(@PathVariable id: Long, @RequestBody productDto: ProductDtoIn) : ResponseEntity<ProductDtoOut> {
-        val product = productService.update(id, mountProductDto(productDto).toModel())
-        val productDto = productToProductDtoOut(product)
-
-        return ResponseEntity.ok(productDto)
+    fun updateProduct(
+            @PathVariable id: Long,
+            @RequestBody productDtoIn: ProductDtoIn
+    ): ResponseEntity<ProductDtoOut> {
+        val product = productMapper.toEntity(productDtoIn)
+        if (product == null) {
+            return ResponseEntity.badRequest().build()
+        }
+        val updatedProduct = productService.update(id, product)
+        val productDtoOut = productMapper.toDto(updatedProduct)
+        return ResponseEntity.ok(productDtoOut)
     }
 
     @DeleteMapping("/{id}")
-    fun deleteProduct(@PathVariable id: Long) {
+    fun deleteProduct(@PathVariable id: Long): ResponseEntity<Void> {
         productService.delete(id)
-    }
-
-    private fun mountProductDto(productDto: ProductDtoIn) : ProductDtoIn {
-        val productCategory = productDto.categoryId?.let { productCategoryService.findById(it) }
-        val manufacturer = productDto.manufacturerId?.let { manufacturerService.findById(it) }
-        val stock = productDto.stockId?.let { stockService.findById(it) }
-
-        if (productCategory != null && manufacturer != null) {
-            productDto.setProductCategory(productCategory)
-            productDto.setProductManufacturer(manufacturer)
-            if (stock != null) {
-                productDto.setStockN(stock)
-            }
-        }
-        return productDto
-    }
-
-    private fun productsToProductsDtoOut(products: List<Product>): List<ProductDtoOut> {
-        val productsDto = products.map { product ->
-            ProductDtoOut(
-                id = product.id,
-                name = product.name,
-                price = product.price,
-                manufacturer = product.manufacturer,
-                manufacturingDate = product.manufacturingDate,
-                expirationDate = product.expirationDate,
-                category = product.category,
-                amount = product.amount,
-                stock = product.stock
-            )
-        }
-        return productsDto
-    }
-
-    private fun productToProductDtoOut(product: Product): ProductDtoOut {
-        val productDto = ProductDtoOut(
-            id = product.id,
-            name = product.name,
-            price = product.price,
-            manufacturer = product.manufacturer,
-            manufacturingDate = product.manufacturingDate,
-            expirationDate = product.expirationDate,
-            category = product.category,
-            amount = product.amount,
-            stock = product.stock
-        )
-
-        return productDto
+        return ResponseEntity.noContent().build()
     }
 }
