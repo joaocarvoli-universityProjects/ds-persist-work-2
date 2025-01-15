@@ -1,9 +1,9 @@
 package br.ufc.work02.controller
 
 import br.ufc.work02.controller.dto.CategoryDto
+import br.ufc.work02.domain.model.Category
 import br.ufc.work02.service.CategoryService
 import org.springframework.data.domain.Sort
-import org.springframework.data.repository.query.Param
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -12,56 +12,63 @@ import org.springframework.web.bind.annotation.*
 class CategoryController(private val productCategoryService: CategoryService) {
 
     @GetMapping
-    fun findAllProductsCategories() : ResponseEntity<List<CategoryDto>> {
-        val productsCategories = productCategoryService.findAll()
-        val productsCategoriesDto = productsCategories.map { CategoryDto(it) }
-        return ResponseEntity.ok(productsCategoriesDto)
+    fun findAllCategories(): ResponseEntity<List<CategoryDto>> {
+        val categories = productCategoryService.findAll()
+        return ResponseEntity.ok(categories.map { toCategoryDto(it) })
     }
 
     @GetMapping("/name")
-    fun findAllByName(@RequestParam("name") name: String) : ResponseEntity<List<CategoryDto>> {
-        val productsCategories = productCategoryService.findAllByName(name)
-        val productsCategoriesDto = productsCategories.map { CategoryDto(it) }
-        return ResponseEntity.ok(productsCategoriesDto)
+    fun findAllByName(@RequestParam("name") name: String): ResponseEntity<List<CategoryDto>> {
+        val categories = productCategoryService.findAllByName(name)
+        return ResponseEntity.ok(categories.map { toCategoryDto(it) })
     }
 
     @GetMapping("/order")
-    fun orderByFieldByDirection(@Param("field") field: String, @Param("direction") direction: String) : ResponseEntity<List<CategoryDto>>{
-        val productsCategories = when(direction){
-            "asc" -> productCategoryService.findAllOrderedByField(field, Sort.Direction.ASC)
-            "desc" -> productCategoryService.findAllOrderedByField(field, Sort.Direction.DESC)
-            else -> listOf()
-        }
-        val productsCategoriesDto = productsCategories.map { CategoryDto(it) }
-
-        return ResponseEntity.ok(productsCategoriesDto)
+    fun orderByFieldByDirection(
+        @RequestParam("field") field: String,
+        @RequestParam("direction") direction: String
+    ): ResponseEntity<List<CategoryDto>> {
+        val sortDirection = parseSortDirection(direction)
+        val categories = productCategoryService.findAllOrderedByField(field, sortDirection)
+        return ResponseEntity.ok(categories.map { toCategoryDto(it) })
     }
 
     @GetMapping("/{id}")
-    fun getProductCategory(@PathVariable id: Long) : ResponseEntity<CategoryDto> {
-        val productCategory = productCategoryService.findById(id)
-        val productCategoryDto = CategoryDto(productCategory)
-        return ResponseEntity.ok(productCategoryDto)
+    fun getCategory(@PathVariable id: Long): ResponseEntity<CategoryDto> {
+        val category = productCategoryService.findById(id)
+        return ResponseEntity.ok(toCategoryDto(category))
     }
 
     @PostMapping
-    fun createProductCategory(@RequestBody productCategoryDto: CategoryDto) : ResponseEntity<CategoryDto> {
-        val productCategory = productCategoryService.create(productCategoryDto.toModel())
-        val productCategoryDtoResultant = CategoryDto(productCategory)
-
-        return ResponseEntity.ok(productCategoryDtoResultant)
+    fun createCategory(@RequestBody categoryDto: CategoryDto): ResponseEntity<CategoryDto> {
+        val category = productCategoryService.create(categoryDto.toModel())
+        return ResponseEntity.ok(toCategoryDto(category))
     }
 
     @PutMapping("/{id}")
-    fun updateProductCategory(@PathVariable id: Long, @RequestBody productCategoryDto: CategoryDto) : ResponseEntity<CategoryDto> {
-        val productCategory = productCategoryService.update(id, productCategoryDto.toModel())
-        val productCategoryDtoResultant = CategoryDto(productCategory)
-
-        return ResponseEntity.ok(productCategoryDtoResultant)
+    fun updateCategory(
+        @PathVariable id: Long,
+        @RequestBody categoryDto: CategoryDto
+    ): ResponseEntity<CategoryDto> {
+        val updatedCategory = productCategoryService.update(id, categoryDto.toModel())
+        return ResponseEntity.ok(toCategoryDto(updatedCategory))
     }
 
     @DeleteMapping("/{id}")
-    fun deleteProductCategory(@PathVariable id: Long) {
+    fun deleteCategory(@PathVariable id: Long): ResponseEntity<Void> {
         productCategoryService.delete(id)
+        return ResponseEntity.noContent().build()
+    }
+
+    private fun parseSortDirection(direction: String): Sort.Direction {
+        return when (direction.lowercase()) {
+            "asc" -> Sort.Direction.ASC
+            "desc" -> Sort.Direction.DESC
+            else -> throw IllegalArgumentException("Invalid sort direction: $direction")
+        }
+    }
+
+    private fun toCategoryDto(category: Category): CategoryDto {
+        return CategoryDto(category)
     }
 }
