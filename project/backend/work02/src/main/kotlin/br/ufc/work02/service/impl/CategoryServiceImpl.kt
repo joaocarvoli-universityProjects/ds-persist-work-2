@@ -2,18 +2,23 @@ package br.ufc.work02.service.impl
 
 import br.ufc.work02.domain.model.Category
 import br.ufc.work02.domain.repository.CategoryRepository
+import br.ufc.work02.exceptions.EntityNotFoundException
 import br.ufc.work02.service.CategoryService
+import br.ufc.work02.utils.ServiceUtils
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CategoryServiceImpl(private val productCategoryRepository: CategoryRepository) : CategoryService {
+    @Transactional
     override fun findAllByName(name: String): List<Category> {
         return productCategoryRepository.findAllByName(name)
     }
 
+    @Transactional
     override fun findAllOrderedByField(field: String, direction: Sort.Direction): List<Category> {
+        ServiceUtils.validateSortField(field)
         val sort: Sort = Sort.by(direction, field)
         return productCategoryRepository.findAllOrderedByField(field, sort)
     }
@@ -25,7 +30,8 @@ class CategoryServiceImpl(private val productCategoryRepository: CategoryReposit
 
     @Transactional
     override fun findById(id: Long): Category {
-        return productCategoryRepository.getReferenceById(id.toInt())
+        return productCategoryRepository.findById(id.toInt())
+            .orElseThrow { EntityNotFoundException("Category with ID $id not found.") }
     }
 
     @Transactional
@@ -35,11 +41,12 @@ class CategoryServiceImpl(private val productCategoryRepository: CategoryReposit
 
     @Transactional
     override fun update(id: Long, model: Category): Category {
-        val productCategory = productCategoryRepository.getReferenceById(id.toInt())
+        val category = productCategoryRepository.findById(id.toInt())
+            .orElseThrow { EntityNotFoundException("Category with ID $id not found.") }
 
-        productCategory.name = model.name
+        category.name = model.name
 
-        return productCategoryRepository.save(productCategory)
+        return productCategoryRepository.save(category)
     }
 
     @Transactional

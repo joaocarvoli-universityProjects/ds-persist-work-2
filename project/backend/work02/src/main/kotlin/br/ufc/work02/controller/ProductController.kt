@@ -3,187 +3,109 @@ package br.ufc.work02.controller
 import br.ufc.work02.controller.dto.ProductDtoIn
 import br.ufc.work02.controller.dto.ProductDtoOut
 import br.ufc.work02.domain.model.Product
-import br.ufc.work02.service.CategoryService
-import br.ufc.work02.service.ManufacturerService
 import br.ufc.work02.service.ProductService
-import br.ufc.work02.service.StockService
 import org.springframework.data.domain.Sort
-import org.springframework.data.repository.query.Param
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/product")
 class ProductController(
-    private val productService: ProductService,
-    private val productCategoryService: CategoryService,
-    private val manufacturerService: ManufacturerService,
-    private val stockService: StockService
+    private val productService: ProductService
 ) {
 
     @GetMapping
-    fun findAllProducts() : ResponseEntity<List<ProductDtoOut>>{
+    fun findAllProducts(): ResponseEntity<List<ProductDtoOut>> {
         val products = productService.findAll()
-        val productsDto = products.map { product ->
-            ProductDtoOut(
-                id = product.id,
-                name = product.name,
-                price = product.price,
-                manufacturer = product.manufacturer,
-                manufacturingDate = product.manufacturingDate,
-                expirationDate = product.expirationDate,
-                category = product.category,
-                amount = product.amount,
-                stock = product.stock
-            )
-        }
-
-        return ResponseEntity.ok(productsDto)
+        return ResponseEntity.ok(products.map { toProductDtoOut(it) })
     }
 
-    @GetMapping("name")
-    fun findAllByNameField(@RequestParam("field") field: String, @RequestParam("name") name: String): ResponseEntity<List<ProductDtoOut>> {
+    @GetMapping("/name")
+    fun findAllByNameField(
+        @RequestParam("field") field: String,
+        @RequestParam("name") name: String
+    ): ResponseEntity<List<ProductDtoOut>> {
         val products = productService.findAllByFieldName(field, name)
-        val productsDto = products.map { product ->
-            ProductDtoOut(
-                id = product.id,
-                name = product.name,
-                price = product.price,
-                manufacturer = product.manufacturer,
-                manufacturingDate = product.manufacturingDate,
-                expirationDate = product.expirationDate,
-                category = product.category,
-                amount = product.amount,
-                stock = product.stock
-            )
-        }
-
-        return ResponseEntity.ok(productsDto)
+        return ResponseEntity.ok(products.map { toProductDtoOut(it) })
     }
 
-    @GetMapping("price")
+    @GetMapping("/price")
     fun findAllByPrice(@RequestParam("price") price: Double): ResponseEntity<List<ProductDtoOut>> {
         val products = productService.findAllByPrice(price)
-        val productsDto = products.map { product ->
-            ProductDtoOut(
-                id = product.id,
-                name = product.name,
-                price = product.price,
-                manufacturer = product.manufacturer,
-                manufacturingDate = product.manufacturingDate,
-                expirationDate = product.expirationDate,
-                category = product.category,
-                amount = product.amount,
-                stock = product.stock
-            )
-        }
-
-        return ResponseEntity.ok(productsDto)
+        return ResponseEntity.ok(products.map { toProductDtoOut(it) })
     }
 
-    @GetMapping("priceRange")
-    fun findAllByPriceRange(@RequestParam("priceInitial") priceInitial: Double,
-                            @RequestParam("priceFinal") priceFinal: Double
-                            ): ResponseEntity<List<ProductDtoOut>> {
+    @GetMapping("/priceRange")
+    fun findAllByPriceRange(
+        @RequestParam("priceInitial") priceInitial: Double,
+        @RequestParam("priceFinal") priceFinal: Double
+    ): ResponseEntity<List<ProductDtoOut>> {
         val products = productService.findAllByPriceRange(priceInitial, priceFinal)
-        val productsDto = productsToProductsDtoOut(products)
-
-        return ResponseEntity.ok(productsDto)
+        return ResponseEntity.ok(products.map { toProductDtoOut(it) })
     }
 
-    @GetMapping("amount")
+    @GetMapping("/amount")
     fun findAllByAmount(@RequestParam("amount") amount: Int): ResponseEntity<List<ProductDtoOut>> {
         val products = productService.findAllByAmount(amount)
-        val productsDto = productsToProductsDtoOut(products)
-
-        return ResponseEntity.ok(productsDto)
+        return ResponseEntity.ok(products.map { toProductDtoOut(it) })
     }
 
-    @GetMapping("amountRange")
-    fun findAllByAmountRange(@RequestParam("amountInitial") amountInitial: Int,
-                             @RequestParam("amountFinal") amountFinal: Int
+    @GetMapping("/amountRange")
+    fun findAllByAmountRange(
+        @RequestParam("amountInitial") amountInitial: Int,
+        @RequestParam("amountFinal") amountFinal: Int
     ): ResponseEntity<List<ProductDtoOut>> {
         val products = productService.findAllByAmountRange(amountInitial, amountFinal)
-        val productsDto = productsToProductsDtoOut(products)
-
-        return ResponseEntity.ok(productsDto)
+        return ResponseEntity.ok(products.map { toProductDtoOut(it) })
     }
 
     @GetMapping("/order")
-    fun orderByFieldByDirection(@Param("field") field: String, @Param("direction") direction: String) : ResponseEntity<List<ProductDtoOut>>{
-        val products = when(direction){
-            "asc" -> productService.findAllOrderedByField(field, Sort.Direction.ASC)
-            "desc" -> productService.findAllOrderedByField(field, Sort.Direction.DESC)
-            else -> listOf()
-        }
-        val productsDtos = productsToProductsDtoOut(products)
-
-        return ResponseEntity.ok(productsDtos)
+    fun orderByFieldByDirection(
+        @RequestParam("field") field: String,
+        @RequestParam("direction") direction: String
+    ): ResponseEntity<List<ProductDtoOut>> {
+        val sortDirection = parseSortDirection(direction)
+        val products = productService.findAllOrderedByField(field, sortDirection)
+        return ResponseEntity.ok(products.map { toProductDtoOut(it) })
     }
 
     @GetMapping("/{id}")
-    fun findProductById(@PathVariable id : Long) : ResponseEntity<ProductDtoOut> {
+    fun findProductById(@PathVariable id: Long): ResponseEntity<ProductDtoOut> {
         val product = productService.findById(id)
-        val productDto = productToProductDtoOut(product)
-
-        return ResponseEntity.ok(productDto)
+        return ResponseEntity.ok(toProductDtoOut(product))
     }
 
     @PostMapping
-    fun createProduct(@RequestBody productDto: ProductDtoIn) : ResponseEntity<ProductDtoOut> {
-        val product = productService.create(mountProductDto(productDto).toModel())
-        val productDto = productToProductDtoOut(product)
-
-        return ResponseEntity.ok(productDto)
+    fun createProduct(@RequestBody productDtoIn: ProductDtoIn): ResponseEntity<ProductDtoOut> {
+        val product = productService.create(productDtoIn.toModel())
+        return ResponseEntity.ok(toProductDtoOut(product))
     }
 
     @PutMapping("/{id}")
-    fun updateProduct(@PathVariable id: Long, @RequestBody productDto: ProductDtoIn) : ResponseEntity<ProductDtoOut> {
-        val product = productService.update(id, mountProductDto(productDto).toModel())
-        val productDto = productToProductDtoOut(product)
-
-        return ResponseEntity.ok(productDto)
+    fun updateProduct(
+        @PathVariable id: Long,
+        @RequestBody productDtoIn: ProductDtoIn
+    ): ResponseEntity<ProductDtoOut> {
+        val updatedProduct = productService.update(id, productDtoIn.toModel())
+        return ResponseEntity.ok(toProductDtoOut(updatedProduct))
     }
 
     @DeleteMapping("/{id}")
-    fun deleteProduct(@PathVariable id: Long) {
+    fun deleteProduct(@PathVariable id: Long): ResponseEntity<Void> {
         productService.delete(id)
+        return ResponseEntity.noContent().build()
     }
 
-    private fun mountProductDto(productDto: ProductDtoIn) : ProductDtoIn {
-        val productCategory = productDto.categoryId?.let { productCategoryService.findById(it) }
-        val manufacturer = productDto.manufacturerId?.let { manufacturerService.findById(it) }
-        val stock = productDto.stockId?.let { stockService.findById(it) }
-
-        if (productCategory != null && manufacturer != null) {
-            productDto.setProductCategory(productCategory)
-            productDto.setProductManufacturer(manufacturer)
-            if (stock != null) {
-                productDto.setStockN(stock)
-            }
+    private fun parseSortDirection(direction: String): Sort.Direction {
+        return when (direction.lowercase()) {
+            "asc" -> Sort.Direction.ASC
+            "desc" -> Sort.Direction.DESC
+            else -> throw IllegalArgumentException("Invalid sort direction: $direction")
         }
-        return productDto
     }
 
-    private fun productsToProductsDtoOut(products: List<Product>): List<ProductDtoOut> {
-        val productsDto = products.map { product ->
-            ProductDtoOut(
-                id = product.id,
-                name = product.name,
-                price = product.price,
-                manufacturer = product.manufacturer,
-                manufacturingDate = product.manufacturingDate,
-                expirationDate = product.expirationDate,
-                category = product.category,
-                amount = product.amount,
-                stock = product.stock
-            )
-        }
-        return productsDto
-    }
-
-    private fun productToProductDtoOut(product: Product): ProductDtoOut {
-        val productDto = ProductDtoOut(
+    private fun toProductDtoOut(product: Product): ProductDtoOut {
+        return ProductDtoOut(
             id = product.id,
             name = product.name,
             price = product.price,
@@ -194,7 +116,6 @@ class ProductController(
             amount = product.amount,
             stock = product.stock
         )
-
-        return productDto
     }
 }
+
